@@ -20,14 +20,14 @@ public class UserService {
     private UserApi userApi;
 
     private Callback<UserBoundary> createNewUserCallback;
-    private Callback<UserBoundary> updateUserCallback;
+    private Callback<Void> updateUserCallback;
     private Callback<UserBoundary> loginUserCallback;
 
     public void initCreateNewUserCallback(Callback<UserBoundary> createNewUserCallback) {
         this.createNewUserCallback = createNewUserCallback;
     }
 
-    public void initUpdateUserCallback(Callback<UserBoundary> updateUserCallback) {
+    public void initUpdateUserCallback(Callback<Void> updateUserCallback) {
         this.updateUserCallback = updateUserCallback;
     }
 
@@ -36,7 +36,7 @@ public class UserService {
     }
 
     public void  initAllCallbacks(Callback<UserBoundary> createNewUserCallback,
-                            Callback<UserBoundary> updateUserCallback,
+                            Callback<Void> updateUserCallback,
                             Callback<UserBoundary> loginUserCallback) {
         this.createNewUserCallback = createNewUserCallback;
         this.updateUserCallback = updateUserCallback;
@@ -69,6 +69,11 @@ public class UserService {
     }
 
     public void createNewUser(String email, String role, String username, String avatar) {
+        if(this.createNewUserCallback == null) {
+            Log.d("vvv", "need to initialize callback first");
+            return;
+        }
+
         NewUserDetails newUserDetails = new NewUserDetails(email, UserRoleBoundary.valueOf(role), username, avatar);
 
         Call<UserBoundary> call = this.userApi.createNewUser(newUserDetails);
@@ -98,46 +103,60 @@ public class UserService {
     }
 
     public void loginUser(String userSpace, String userEmail) {
+        if(this.loginUserCallback == null) {
+            Log.d("vvv", "need to initialize callback first");
+            return;
+        }
 
         Call<UserBoundary> call = this.userApi.loginUser(userSpace, userEmail);
 
-        call.enqueue(new Callback<UserBoundary>() {
-            @Override
-            public void onResponse(Call<UserBoundary> call, Response<UserBoundary> response) {
-                if(!response.isSuccessful()) {
-                    Log.d("vvv", response.code() + ": " + response.message());
-                    return;
-                }
+        call.enqueue(this.loginUserCallback);
 
-//              Login user.
-                UserBoundary user = response.body();
-
-                //TODO implement login
-            }
-
-            @Override
-            public void onFailure(Call<UserBoundary> call, Throwable t) {
-
-            }
-        });
+//        call.enqueue(new Callback<UserBoundary>() {
+//            @Override
+//            public void onResponse(Call<UserBoundary> call, Response<UserBoundary> response) {
+//                if(!response.isSuccessful()) {
+//                    Log.d("vvv", response.code() + ": " + response.message());
+//                    return;
+//                }
+//
+////              Login user.
+//                UserBoundary user = response.body();
+//
+//                //TODO implement login
+//            }
+//
+//            @Override
+//            public void onFailure(Call<UserBoundary> call, Throwable t) {
+//
+//            }
+//        });
 
     }
 
     public void updateUser(String userSpace, String userEmail, UserBoundary update) {
+        if(this.updateUserCallback == null) {
+            Log.d("vvv", "need to initialize callback first");
+            return;
+        }
+
+
 
         Call<Void> call = this.userApi.updateUser(userSpace, userEmail, update);
 
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
-                Log.d("vvv", "update successful " + response.code());
-            }
+        call.enqueue(this.updateUserCallback);
 
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Log.d("vvv", "FAILED " + t.getMessage());
-            }
-        });
+//        call.enqueue(new Callback<Void>() {
+//            @Override
+//            public void onResponse(Call<Void> call, Response<Void> response) {
+//                Log.d("vvv", "update successful " + response.code());
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Void> call, Throwable t) {
+//                Log.d("vvv", "FAILED " + t.getMessage());
+//            }
+//        });
     }
 
 }
