@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="15dp"
+    tools:context=".activities.LoginActivity">
+
+    <TextView
+        android:id="@+id/login_TXT_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_centerHorizontal="true"
+        android:text="Login"
+        android:textColor="@color/black"
+        android:textSize="30sp" />
+
+
+    <RelativeLayout
+        android:id="@+id/login_LAY_signIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_TXT_title"
+        android:layout_marginTop="50dp">
+
+        <EditText
+            android:id="@+id/login_EDT_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:padding="10dp"
+            android:textSize="17sp" />
+
+        <EditText
+            android:id="@+id/login_EDT_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_EDT_email"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:textSize="17sp" />
+
+        <ImageView
+            android:id="@+id/login_IMG_showHidePass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/login_EDT_password"
+            android:layout_alignBottom="@+id/login_EDT_password"
+            android:layout_marginLeft="-60dp"
+            android:layout_toRightOf="@+id/login_EDT_password" />
+
+        <TextView
+            android:id="@+id/login_LBL_forgotPass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_EDT_password"
+            android:layout_alignRight="@+id/login_EDT_password"
+            android:text="Forgot Password?"
+            android:textSize="17sp" />
+
+        <Button
+            android:id="@+id/login_BTN_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_EDT_password"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="45dp"
+            android:text="Sign in with Bookies"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/login_TXT_or"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_BTN_login"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="or"
+            android:textSize="16dp"
+            />
+
+        <Button
+            android:id="@+id/login_BTN_googleLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_TXT_or"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginRight="45dp"
+            android:text="Sign in with Google"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            />
+
+        <Button
+            android:id="@+id/login_BTN_facebookLogin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_BTN_googleLogin"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="45dp"
+            android:layout_marginRight="45dp"
+            android:text="Sign in with Facebook"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:textAllCaps="false"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/login_LAY_noAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/login_LAY_signIn"
+        android:layout_marginTop="70dp"
+        android:padding="25dp">
+
+        <LinearLayout
+            android:id="@+id/login_LAY_signUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            >
+
+            <TextView
+                android:id="@+id/login_TXT_dontHaveAccout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Don't have Bookies account?"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/login_TXT_signUp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="7dp"
+                android:text="Sign up"
+                android:textSize="18sp" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,10 +1,15 @@
 package com.dts.bookies;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.dts.bookies.activities.LoginActivity;
 import com.dts.bookies.logic.boundaries.NewUserDetails;
 import com.dts.bookies.logic.boundaries.UserBoundary;
 import com.dts.bookies.logic.boundaries.subboundaries.UserRoleBoundary;
@@ -23,6 +28,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Button main_BTN_login;
+    private Button main_BTN_createNewDummyUser;
+    private TextView main_TXT_dummyEmail;
+    private TextView main_TXT_dummyUsername;
+    private TextView main_TXT_dummyRole;
+    private TextView main_TXT_dummyAvatar;
+
+
     private UserService userService;
 
     @Override
@@ -30,17 +43,48 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        findViews();
+        findTempViews();
+
+        this.main_BTN_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(i);
+            }
+        });
+
         Retrofit retrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(Constants.BASE_URL) // 10.0.2.2 is the computer's localhost, while 127.0.0.1 is the phone emulator localhost..
                 .build();
 
 //        example for a call in the onCreate method. (3 short simple lines)
-        UserService userService = new UserService(retrofit);
+        this.userService = new UserService(retrofit);
 
-        userService.initCreateNewUserCallback(createNewUserCallback);
-        userService.createNewUser("dummy@mail.com", "ADMIN", "dummy", "__!_,");
+        this.userService.initCreateNewUserCallback(createNewUserCallback);
 
+        this.main_BTN_createNewDummyUser.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                userService.createNewUser("dummy@email.com", "ADMIN", "dumpster", "__!_,");
+            }
+        });
+
+
+    }
+
+    private void findViews() {
+        this.main_BTN_login = findViewById(R.id.main_BTN_login);
+    }
+
+    private void findTempViews() {
+        this.main_BTN_createNewDummyUser = findViewById(R.id.main_BTN_createNewDummyUser);
+        this.main_TXT_dummyEmail = findViewById(R.id.main_TXT_dummyEmail);
+        this.main_TXT_dummyUsername = findViewById(R.id.main_TXT_dummyUsername);
+        this.main_TXT_dummyRole = findViewById(R.id.main_TXT_dummyRole);
+        this.main_TXT_dummyAvatar = findViewById(R.id.main_TXT_dummyAvatar);
     }
 
 //  This is the implementation for the activities that creating new users.
