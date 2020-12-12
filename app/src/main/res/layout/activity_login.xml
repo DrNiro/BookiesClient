@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
+    android:padding="10dp"
     tools:context=".activities.LoginActivity">
 
     <TextView
@@ -67,7 +67,7 @@
             android:layout_below="@id/login_EDT_password"
             android:layout_alignRight="@+id/login_EDT_password"
             android:text="Forgot Password?"
-            android:textSize="17sp" />
+            android:textSize="13sp" />
 
         <Button
             android:id="@+id/login_BTN_login"

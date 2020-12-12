@@ -10,6 +10,9 @@ public class Constants {
 	public static final Pattern VALID_EMAIL_ADDRESS_REGEX = 
 		    Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", Pattern.CASE_INSENSITIVE);
 
+//	between 6 to 50 chars, must contain at least 1 letter and at least 1 number, may contain special signs such as !@#$%^&*
+	public static final Pattern VALID_PASSWORD_REGEX = Pattern.compile("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d^a-zA-Z0-9].{5,50}$");
+
 	public static final String SPACE_NAME = "2021a.hadar.bonavida";
 
 }

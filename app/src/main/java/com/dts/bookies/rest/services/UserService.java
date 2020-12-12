@@ -79,26 +79,6 @@ public class UserService {
         Call<UserBoundary> call = this.userApi.createNewUser(newUserDetails);
 
         call.enqueue(this.createNewUserCallback);
-//
-//        call.enqueue(new Callback<UserBoundary>() {
-//            @Override
-//            public void onResponse(Call<UserBoundary> call, Response<UserBoundary> response) {
-//                if(!response.isSuccessful()) {
-//                    Log.d("vvv", response.code() + ": " + response.message());
-//                    return;
-//                }
-//
-////              successful, do something with the new user.
-//                UserBoundary newUser = response.body();
-//
-//                Log.d("vvv", newUser.toString());
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UserBoundary> call, Throwable t) {
-//                Log.d("vvv", "FAILED " + t.getMessage());
-//            }
-//        });
 
     }
 
@@ -111,26 +91,6 @@ public class UserService {
         Call<UserBoundary> call = this.userApi.loginUser(userSpace, userEmail);
 
         call.enqueue(this.loginUserCallback);
-
-//        call.enqueue(new Callback<UserBoundary>() {
-//            @Override
-//            public void onResponse(Call<UserBoundary> call, Response<UserBoundary> response) {
-//                if(!response.isSuccessful()) {
-//                    Log.d("vvv", response.code() + ": " + response.message());
-//                    return;
-//                }
-//
-////              Login user.
-//                UserBoundary user = response.body();
-//
-//                //TODO implement login
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UserBoundary> call, Throwable t) {
-//
-//            }
-//        });
 
     }
 

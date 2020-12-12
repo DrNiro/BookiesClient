@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.SignUpActivity"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/signup_TXT_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sign Up"
+        android:textColor="@color/black"
+        android:layout_marginLeft="5dp"
+        android:textSize="30sp"
+        android:layout_marginTop="40dp"
+        />
+
+    <TextView
+        android:id="@+id/signup_LBL_free"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create a new account"
+        android:layout_marginLeft="5dp"
+        android:textSize="16sp"
+        android:layout_below="@id/signup_TXT_title"
+        android:layout_marginTop="10dp"
+        />
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/signup_TXT_title"
+        android:layout_marginTop="40dp">
+
+        <EditText
+            android:id="@+id/signup_EDT_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:layout_marginRight="13dp"
+            android:layout_marginLeft="13dp"
+            android:textSize="17sp"
+            android:layout_marginTop="10dp"
+            android:hint="* Username"/>
+
+        <EditText
+            android:id="@+id/signup_EDT_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/signup_EDT_username"
+            android:layout_marginRight="13dp"
+            android:layout_marginLeft="13dp"
+            android:layout_marginTop="10dp"
+            android:inputType="text"
+            android:textSize="17sp"
+            android:hint="* Avatar"/>
+
+        <EditText
+            android:id="@+id/signup_EDT_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="13dp"
+            android:layout_marginLeft="13dp"
+            android:textSize="17sp"
+            android:layout_below="@+id/signup_EDT_avatar"
+            android:hint="* Email"
+            android:layout_marginTop="10dp"
+            android:inputType="textEmailAddress" />
+
+        <EditText
+            android:id="@+id/signup_EDT_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="13dp"
+            android:layout_marginLeft="13dp"
+            android:textSize="17sp"
+            android:inputType="textPassword"
+            android:hint="* Password - at lease 6 characters"
+            android:layout_below="@+id/signup_EDT_email"
+            android:layout_marginTop="10dp"
+            />
+
+        <EditText
+            android:id="@+id/signup_EDT_confirmPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="13dp"
+            android:layout_marginLeft="13dp"
+            android:textSize="17sp"
+            android:hint="* Confirm password"
+            android:layout_below="@+id/signup_EDT_password"
+            android:layout_marginTop="10dp"
+            android:inputType="textPassword" />
+
+        <Button
+            android:id="@+id/signup_BTN_createAccount"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:text="Create account"
+            android:layout_below="@+id/signup_EDT_confirmPassword"
+            android:layout_marginTop="70dp"
+            android:layout_centerHorizontal="true"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            />
+
+        <TextView
+            android:id="@+id/signup_LBL_disclaimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="By Signing Up, you agree to our Terms and Conditions."
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="15dp"
+            android:gravity="center"
+            android:textSize="12sp"
+            android:layout_centerHorizontal="true"
+            />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>
