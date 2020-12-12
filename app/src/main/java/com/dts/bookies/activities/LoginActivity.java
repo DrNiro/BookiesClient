@@ -3,6 +3,7 @@ package com.dts.bookies.activities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.accounts.AccountAuthenticatorActivity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,8 +14,10 @@ import com.dts.bookies.R;
 import com.dts.bookies.logic.boundaries.UserBoundary;
 import com.dts.bookies.rest.services.UserService;
 import com.dts.bookies.util.Constants;
+import com.dts.bookies.util.Functions;
 import com.dts.bookies.util.MySharedPreferences;
 import com.dts.bookies.util.PrefsKeys;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,6 +33,11 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     private EditText login_EDT_email;
     private EditText login_EDT_password;
 
+    private boolean validEmail;
+    private boolean validPassword;
+
+    private UserBoundary myUser;
+
     private MySharedPreferences prefs;
 
     @Override
@@ -38,6 +46,7 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         setContentView(R.layout.activity_login);
 
         findViews();
+        validEmail = false;
 
         prefs = new MySharedPreferences(this);
 
@@ -55,14 +64,20 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                 String email = login_EDT_email.getText().toString().trim();
                 String password = login_EDT_password.getText().toString().trim();
 
+                if (!Functions.isValidEmail(email)) {
+                    login_EDT_email.setError("invalid email");
+                    return;
+                } else {
+                    validEmail = true;
+                }
 //                String credentialsJson = prefs.getString(PrefsKeys.USER_CREDENTIALS, null);
 //                if(credentialsJson == null) {
 //
 //                }
-
+                userService.loginUser(Constants.SPACE_NAME, email);
 //                TODO: check if email exist in db and move to main app page.
-
-//                userService.loginUser();
+                Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
+                startActivity(mainPageActivityIntent);
             }
         });
 
@@ -78,10 +93,15 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         @Override
         public void onResponse(Call<UserBoundary> call, Response<UserBoundary> response) {
             if(!response.isSuccessful()) {
+//                TODO: if code is 500 then notify user that user does not exist by this email.
                 Log.d("vvv", response.code() + ": " + response.message());
                 return;
             }
 
+            myUser = response.body();
+
+            String myUserJson = new Gson().toJson(myUser);
+            prefs.putString(PrefsKeys.USER_BOUNDARY, myUserJson);
         }
 
         @Override

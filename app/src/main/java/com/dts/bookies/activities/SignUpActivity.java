@@ -73,8 +73,6 @@ public class SignUpActivity extends AppCompatActivity {
                 String password = signup_EDT_password.getText().toString();
                 String confirmPassword = signup_EDT_confirmPassword.getText().toString();
 
-
-//                Log.d("vvv", "new user: " + newUser.toString());
                 Log.d("vvv", "username: " + username);
                 Log.d("vvv", "avatar: " + avatar);
                 Log.d("vvv", "email: " + email);
@@ -82,8 +80,14 @@ public class SignUpActivity extends AppCompatActivity {
 
                 userService.createNewUser(email, "PLAYER", username, avatar);
 
+//                Log.d("vvv", "new user: " + newUser.toString());
+
                 userCredentials = new UserCredentials(email, password);
                 Log.d("vvv", "hash password: " + userCredentials.getHashedPassword());
+
+//            move to profile/main page.
+                Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
+                startActivity(mainPageActivityIntent);
             }
         });
 
@@ -180,22 +184,18 @@ public class SignUpActivity extends AppCompatActivity {
 
 //            save user details in local memory as json.
             String newUserJson = new Gson().toJson(newUser);
-            prefs.putString(PrefsKeys.USER_DETAILS, newUserJson);
-
-//            save user credentials in local memory as json.
-            String userCredentialsJson = new Gson().toJson(userCredentials);
-            prefs.putString(PrefsKeys.USER_CREDENTIALS, userCredentialsJson);
+            prefs.putString(PrefsKeys.USER_BOUNDARY, newUserJson);
 
             Log.d("vvv", "new user: " + newUser.toString());
-            Log.d("vvv", "credentials: " + userCredentialsJson);
+
+//            save user credentials in local memory as json.
+//            String userCredentialsJson = new Gson().toJson(userCredentials);
+//            prefs.putString(PrefsKeys.USER_CREDENTIALS, userCredentialsJson);
+
+//            Log.d("vvv", "credentials: " + userCredentialsJson);
 
 //            pop-up account created successfully.
             Toast.makeText(SignUpActivity.this, "Account created", Toast.LENGTH_LONG).show();
-
-//            move to profile/main page.
-            Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
-            startActivity(mainPageActivityIntent);
-
         }
 
         @Override
