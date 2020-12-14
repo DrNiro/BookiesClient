@@ -3,13 +3,16 @@ package com.dts.bookies.util;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dts.bookies.activities.MainPageActivity;
 import com.dts.bookies.logic.boundaries.UserBoundary;
+import com.dts.bookies.util.memento.Memento;
 import com.google.gson.Gson;
 
+import java.util.List;
 import java.util.regex.Matcher;
 
 public class Functions {
@@ -33,6 +36,16 @@ public class Functions {
             return new Gson().fromJson(myUserJson, UserBoundary.class);
         } else {
             return null;
+        }
+    }
+
+    public static void printMementoList(List<Memento> memList) {
+        if(memList.size() == 0) {
+            Log.d("mem","empty list");
+            return;
+        }
+        for(int i = 0; i < memList.size(); i++) {
+            Log.d("mem", "mem #" + (i+1) + ": " + memList.get(i));
         }
     }
 

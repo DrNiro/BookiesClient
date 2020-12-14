@@ -2,7 +2,6 @@ package com.dts.bookies;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -11,18 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.dts.bookies.activities.LoginActivity;
 import com.dts.bookies.activities.MainPageActivity;
 import com.dts.bookies.activities.SignUpActivity;
-import com.dts.bookies.logic.boundaries.UserBoundary;
-import com.dts.bookies.rest.services.UserService;
-import com.dts.bookies.util.Constants;
 import com.dts.bookies.util.MySharedPreferences;
 import com.dts.bookies.util.PrefsKeys;
-import com.google.gson.Gson;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class StartingActivity extends AppCompatActivity {
 
@@ -38,7 +27,7 @@ public class StartingActivity extends AppCompatActivity {
 
         prefs = new MySharedPreferences(this);
 
-        prefs.putInt(PrefsKeys.LOGGED_STATE, 0); //        uncomment this line to cancel auto login, OR comment back to let system behave normally.
+//        prefs.putInt(PrefsKeys.LOGGED_STATE, 0); //        uncomment this line to cancel auto login, OR comment back to let system behave normally.
         if(prefs.getInt(PrefsKeys.LOGGED_STATE, 0) > 0) {   // if logged in
 //            go straight into account
             Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
@@ -70,8 +59,8 @@ public class StartingActivity extends AppCompatActivity {
     }
 
     private void findViews() {
-        main_BTN_login = findViewById(R.id.main_BTN_login);
-        main_BTN_signUp = findViewById(R.id.main_BTN_signUp);
+        main_BTN_login = findViewById(R.id.starting_BTN_login);
+        main_BTN_signUp = findViewById(R.id.starting_BTN_signUp);
     }
 
 }

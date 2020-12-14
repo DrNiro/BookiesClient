@@ -61,6 +61,7 @@ public class ProfileFragment extends Fragment {
         profile_BTN_logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                prefs.putInt(PrefsKeys.LOGGED_STATE, 0);
                 buttonClickedCallback.buttonClicked(view);
             }
         });
