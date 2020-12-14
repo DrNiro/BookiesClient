@@ -11,10 +11,6 @@ public abstract class TextValidator implements TextWatcher {
 
     public TextValidator(EditText editText) {
         this.editText = editText;
-        Log.d("vvv", "init editText");
-        if(this.editText == null) {
-            Log.d("vvv", "null editText");
-        }
     }
 
     public abstract void validate(EditText editText, String text);

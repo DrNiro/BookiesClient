@@ -9,11 +9,13 @@ import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dts.bookies.activities.LoginActivity;
+import com.dts.bookies.activities.MainPageActivity;
 import com.dts.bookies.activities.SignUpActivity;
 import com.dts.bookies.logic.boundaries.UserBoundary;
 import com.dts.bookies.rest.services.UserService;
 import com.dts.bookies.util.Constants;
 import com.dts.bookies.util.MySharedPreferences;
+import com.dts.bookies.util.PrefsKeys;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -34,33 +36,42 @@ public class StartingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
 
-        this.prefs = new MySharedPreferences(this);
+        prefs = new MySharedPreferences(this);
+
+        prefs.putInt(PrefsKeys.LOGGED_STATE, 0); //        uncomment this line to cancel auto login, OR comment back to let system behave normally.
+        if(prefs.getInt(PrefsKeys.LOGGED_STATE, 0) > 0) {   // if logged in
+//            go straight into account
+            Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
+            startActivity(mainPageActivityIntent);
+            StartingActivity.this.finish();
+            return;
+        }
 
         findViews();
 
-//        TODO: if user is already logged in - go straight to profile/main page, else stay here.
-
-        this.main_BTN_signUp.setOnClickListener(new View.OnClickListener() {
+        main_BTN_signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent signUpActivityIntent = new Intent(getApplicationContext(), SignUpActivity.class);
                 startActivity(signUpActivityIntent);
+                StartingActivity.this.finish();
             }
         });
 
-        this.main_BTN_login.setOnClickListener(new View.OnClickListener() {
+        main_BTN_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent loginActivityIntent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(loginActivityIntent);
+                StartingActivity.this.finish();
             }
         });
 
     }
 
     private void findViews() {
-        this.main_BTN_login = findViewById(R.id.main_BTN_login);
-        this.main_BTN_signUp = findViewById(R.id.main_BTN_signUp);
+        main_BTN_login = findViewById(R.id.main_BTN_login);
+        main_BTN_signUp = findViewById(R.id.main_BTN_signUp);
     }
 
 }

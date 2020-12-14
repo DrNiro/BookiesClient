@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.dts.bookies.R;
+import com.dts.bookies.StartingActivity;
 import com.dts.bookies.logic.boundaries.UserBoundary;
 import com.dts.bookies.rest.services.UserService;
 import com.dts.bookies.util.Constants;
@@ -75,9 +76,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 //
 //                }
                 userService.loginUser(Constants.SPACE_NAME, email);
-//                TODO: check if email exist in db and move to main app page.
-                Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
-                startActivity(mainPageActivityIntent);
             }
         });
 
@@ -89,11 +87,15 @@ public class LoginActivity extends AccountAuthenticatorActivity {
         this.login_EDT_password = findViewById(R.id.login_EDT_password);
     }
 
+//    TODO: check if password mechanism is needed.
     private Callback<UserBoundary> loginUserCallback = new Callback<UserBoundary>() {
         @Override
         public void onResponse(Call<UserBoundary> call, Response<UserBoundary> response) {
             if(!response.isSuccessful()) {
-//                TODO: if code is 500 then notify user that user does not exist by this email.
+                if(response.code() == 404) {
+                    Log.d("vvv", "404: user not found");
+                    login_EDT_email.setError("user not found");
+                }
                 Log.d("vvv", response.code() + ": " + response.message());
                 return;
             }
@@ -101,33 +103,25 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             myUser = response.body();
 
             String myUserJson = new Gson().toJson(myUser);
-            prefs.putString(PrefsKeys.USER_BOUNDARY, myUserJson);
+            Functions.saveUserToPrefs(myUserJson, prefs, 1);
+
+            Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
+            startActivity(mainPageActivityIntent);
+            LoginActivity.this.finish();
         }
 
         @Override
         public void onFailure(Call<UserBoundary> call, Throwable t) {
-
+            Log.d("vvv", "failure login, message: " + t.getMessage());
         }
     };
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent startingActivityIntent = new Intent(getApplicationContext(), StartingActivity.class);
+        startActivity(startingActivityIntent);
+        LoginActivity.this.finish();
+    }
 
-    //        call.enqueue(new Callback<UserBoundary>() {
-//            @Override
-//            public void onResponse(Call<UserBoundary> call, Response<UserBoundary> response) {
-//                if(!response.isSuccessful()) {
-//                    Log.d("vvv", response.code() + ": " + response.message());
-//                    return;
-//                }
-//
-////              Login user.
-//                UserBoundary user = response.body();
-//
-//                //TODO implement login
-//            }
-//
-//            @Override
-//            public void onFailure(Call<UserBoundary> call, Throwable t) {
-//
-//            }
-//        });
 }

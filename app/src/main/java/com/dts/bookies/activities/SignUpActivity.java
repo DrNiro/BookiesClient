@@ -1,5 +1,6 @@
 package com.dts.bookies.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.dts.bookies.R;
+import com.dts.bookies.StartingActivity;
 import com.dts.bookies.UserCredentials;
 import com.dts.bookies.logic.boundaries.UserBoundary;
 import com.dts.bookies.rest.services.UserService;
@@ -28,8 +30,6 @@ import retrofit2.Response;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    private final int NUM_OF_EDIT_TEXTS = 5;
-
     private EditText signup_EDT_username;
     private EditText signup_EDT_avatar;
     private EditText signup_EDT_email;
@@ -37,6 +37,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText signup_EDT_confirmPassword;
     private Button signup_BTN_createAccount;
 
+//    private final int NUM_OF_EDIT_TEXTS = 5;
 //    private boolean[] validations = new boolean[NUM_OF_EDIT_TEXTS];
     private boolean[] validations = {false, false, false, false, false};
 
@@ -46,20 +47,21 @@ public class SignUpActivity extends AppCompatActivity {
 
     private MySharedPreferences prefs;
 
+    private boolean userCreatedFlag = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
         findViews();
-        Log.d("vvv", "initialized edit texts.");
 
-        this.prefs = new MySharedPreferences(this);
+        prefs = new MySharedPreferences(this);
 
-        this.userService = new UserService();
-        this.userService.initCreateNewUserCallback(createNewUserCallback);
+        userService = new UserService();
+        userService.initCreateNewUserCallback(createNewUserCallback);
 
-        this.signup_BTN_createAccount.setOnClickListener(new View.OnClickListener() {
+        signup_BTN_createAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(!(validations[0] && validations[1] && validations[2] && validations[3] && validations[4])) {
@@ -82,12 +84,13 @@ public class SignUpActivity extends AppCompatActivity {
 
 //                Log.d("vvv", "new user: " + newUser.toString());
 
+                Log.d("vvv", "-----TESTING----- checking userCreatedFlag");
+//                check if user created successfully, else don't save credentials and don't move to the next page.
+                if(!userCreatedFlag)
+                    return;
+
                 userCredentials = new UserCredentials(email, password);
                 Log.d("vvv", "hash password: " + userCredentials.getHashedPassword());
-
-//            move to profile/main page.
-                Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
-                startActivity(mainPageActivityIntent);
             }
         });
 
@@ -175,6 +178,10 @@ public class SignUpActivity extends AppCompatActivity {
         public void onResponse(Call<UserBoundary> call, Response<UserBoundary> response) {
             if(!response.isSuccessful()) {
                 Log.d("vvv", response.code() + ": " + response.message());
+                if(response.code() == 500) {
+                    signup_EDT_email.setError("email already exist ");
+                    Log.d("vvv", "user already exist by this email");
+                }
                 // code 500 means user already exist with this email and need to notify user (maybe with toast message).
                 return;
             }
@@ -184,7 +191,9 @@ public class SignUpActivity extends AppCompatActivity {
 
 //            save user details in local memory as json.
             String newUserJson = new Gson().toJson(newUser);
-            prefs.putString(PrefsKeys.USER_BOUNDARY, newUserJson);
+            Functions.saveUserToPrefs(newUserJson, prefs, 1);
+//            prefs.putString(PrefsKeys.USER_BOUNDARY, newUserJson);
+
 
             Log.d("vvv", "new user: " + newUser.toString());
 
@@ -193,6 +202,14 @@ public class SignUpActivity extends AppCompatActivity {
 //            prefs.putString(PrefsKeys.USER_CREDENTIALS, userCredentialsJson);
 
 //            Log.d("vvv", "credentials: " + userCredentialsJson);
+
+//            Log.d("vvv", "-----TESTING----- setting userCreatedFlag = true");
+//            userCreatedFlag = true;
+
+//            move to profile/main page.
+            Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
+            startActivity(mainPageActivityIntent);
+            SignUpActivity.this.finish();
 
 //            pop-up account created successfully.
             Toast.makeText(SignUpActivity.this, "Account created", Toast.LENGTH_LONG).show();
@@ -203,6 +220,15 @@ public class SignUpActivity extends AppCompatActivity {
             Log.d("vvv", "FAILED " + t.getMessage());
         }
     };
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent startingActivityIntent = new Intent(getApplicationContext(), StartingActivity.class);
+        startActivity(startingActivityIntent);
+        SignUpActivity.this.finish();
+    }
 
 //    private TextValidator usernameValidator = new TextValidator(signup_EDT_username) {
 //        @Override
