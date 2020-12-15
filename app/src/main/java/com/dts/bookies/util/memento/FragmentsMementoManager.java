@@ -4,7 +4,13 @@ import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
+import com.dts.bookies.activities.fragments.MapFragment;
+import com.dts.bookies.activities.fragments.ProfileFragment;
+import com.dts.bookies.activities.fragments.SearchFragment;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FragmentsMementoManager {
 
@@ -12,10 +18,20 @@ public class FragmentsMementoManager {
     private Originator originator;
     private CareTaker careTaker;
 
+    private Map<String, Memento> mementoMap;
+
     public FragmentsMementoManager() {
         this.currentFragment = null;
         this.originator = new Originator();
-        this. careTaker = new CareTaker();
+        this.careTaker = new CareTaker();
+        initMap();
+    }
+
+    public void initMap() {
+        this.mementoMap = new HashMap<>();
+        this.mementoMap.put(ProfileFragment.class.getSimpleName(), new Memento(MementoStates.PROFILE_STATE));
+        this.mementoMap.put(MapFragment.class.getSimpleName(), new Memento(MementoStates.MAP_STATE));
+        this.mementoMap.put(SearchFragment.class.getSimpleName(), new Memento(MementoStates.SEARCH_STATE));
     }
 
     public Fragment getCurrentFragment() {
@@ -63,25 +79,13 @@ public class FragmentsMementoManager {
         String newFocusName = newFocusFragment.getClass().getSimpleName();
 
 //        if new focused fragment already exist in the list - delete it.
-        if(newFocusName.equals("ProfileFragment") && careTaker.getMementoList().contains(new Memento(MementoStates.PROFILE_STATE))) {
-            careTaker.getMementoList().remove(new Memento(MementoStates.PROFILE_STATE));
-        } else if(newFocusName.equals("MapFragment") && careTaker.getMementoList().contains(new Memento(MementoStates.MAP_STATE))) {
-            careTaker.getMementoList().remove(new Memento(MementoStates.MAP_STATE));
-        } else if(newFocusName.equals("SearchFragment") && careTaker.getMementoList().contains(new Memento(MementoStates.SEARCH_STATE))) {
-            careTaker.getMementoList().remove(new Memento(MementoStates.SEARCH_STATE));
-        }
+        Memento nextFragMemento = mementoMap.get(newFocusName);
+        careTaker.getMementoList().remove(nextFragMemento);
 
 //        add off focused fragment to memento list.
-        if(offFocusName.equals("ProfileFragment")) {
-            originator.setState(MementoStates.PROFILE_STATE);   // generate string value by Originator
-            careTaker.add(originator.saveStateToMemento());     // export value as Memento with Originator and save in Memento list by CareTaker
-        } else if(offFocusName.equals("MapFragment")) {
-            originator.setState(MementoStates.MAP_STATE);
-            careTaker.add(originator.saveStateToMemento());
-        } else if(offFocusName.equals("SearchFragment")) {
-            originator.setState(MementoStates.SEARCH_STATE);
-            careTaker.add(originator.saveStateToMemento());
-        }
+        Memento currentFragMemento = mementoMap.get(offFocusName);
+        originator.setState(currentFragMemento.getState());   // generate string value by Originator
+        careTaker.add(originator.saveStateToMemento());     // export value as Memento with Originator and save in Memento list by CareTaker
 
         Log.d("mem", "(FragmentMementoManager)added: " + careTaker.getLastMemento().getState());
     }

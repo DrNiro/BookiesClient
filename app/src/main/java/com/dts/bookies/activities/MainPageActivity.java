@@ -6,7 +6,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -18,7 +17,6 @@ import com.dts.bookies.activities.fragments.SearchFragment;
 import com.dts.bookies.callbacks.ButtonClickedCallback;
 import com.dts.bookies.util.Functions;
 import com.dts.bookies.util.MySharedPreferences;
-import com.dts.bookies.util.PrefsKeys;
 import com.dts.bookies.util.memento.FragmentsMementoManager;
 import com.dts.bookies.util.memento.MementoStates;
 
@@ -37,6 +35,7 @@ public class MainPageActivity extends AppCompatActivity {
     private ImageView main_BTN_search;
 
     private Map<String, ImageView> imageButtonsMap;
+    private Map<String, Fragment> fragmentsMap;
 
     private FragmentsMementoManager mementoManager;
     private MySharedPreferences prefs;
@@ -49,8 +48,8 @@ public class MainPageActivity extends AppCompatActivity {
         prefs = new MySharedPreferences(this);
 
         findViews();
-        initialFragmentsAndMemento();
-        initialBtnsMap();
+        initFragmentsAndMemento();
+        initMaps();
         stageFragments(profileFragment);
 
         main_BTN_profile.setOnClickListener(profileClickListener);
@@ -67,7 +66,7 @@ public class MainPageActivity extends AppCompatActivity {
         main_BTN_search = findViewById(R.id.main_BTN_search);
     }
 
-    private void initialFragmentsAndMemento() {
+    private void initFragmentsAndMemento() {
         profileFragment = new ProfileFragment();
         profileFragment.setCallback(buttonClickedCallback);
         mapFragment = new MapFragment();
@@ -76,11 +75,16 @@ public class MainPageActivity extends AppCompatActivity {
         mementoManager = new FragmentsMementoManager();
     }
 
-    private void initialBtnsMap() {
+    private void initMaps() {
         imageButtonsMap = new HashMap<>();
         imageButtonsMap.put(profileFragment.getClass().getSimpleName(), main_BTN_profile);
         imageButtonsMap.put(mapFragment.getClass().getSimpleName(), main_BTN_map);
         imageButtonsMap.put(searchFragment.getClass().getSimpleName(), main_BTN_search);
+
+        fragmentsMap = new HashMap<>();
+        fragmentsMap.put(MementoStates.PROFILE_STATE, profileFragment);
+        fragmentsMap.put(MementoStates.MAP_STATE, mapFragment);
+        fragmentsMap.put(MementoStates.SEARCH_STATE, searchFragment);
     }
 
     private void stageFragments(Fragment firstFocusFrag) {
@@ -133,17 +137,11 @@ public class MainPageActivity extends AppCompatActivity {
         switchFragmentFocus(currentFragment, nextFragment);
     }
 
-//    TODO: generalize to not care about fragments (using Map)
     private void previousFragClick(Fragment currentFragment) {
 //        get last memento (last frag visited) and switch fragment focus
         mementoManager.setOriginatorState(mementoManager.getAndRemoveLastMemento());
-        if(mementoManager.getOriginatorState().equals(MementoStates.PROFILE_STATE)) {
-            switchFragmentFocus(currentFragment, profileFragment);
-        } else if(mementoManager.getOriginatorState().equals(MementoStates.MAP_STATE)) {
-            switchFragmentFocus(currentFragment, mapFragment);
-        } else if(mementoManager.getOriginatorState().equals(MementoStates.SEARCH_STATE)) {
-            switchFragmentFocus(currentFragment, searchFragment);
-        }
+        Fragment previousFrag = fragmentsMap.get(mementoManager.getOriginatorState());
+        switchFragmentFocus(currentFragment, previousFrag);
     }
 
     @Override
