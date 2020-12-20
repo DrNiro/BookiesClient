@@ -1,6 +1,7 @@
 package com.dts.bookies.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.accounts.AccountAuthenticatorActivity;
 import android.content.Intent;
@@ -12,12 +13,14 @@ import android.widget.EditText;
 
 import com.dts.bookies.R;
 import com.dts.bookies.StartingActivity;
+import com.dts.bookies.activities.fragments.MapFragment;
 import com.dts.bookies.logic.boundaries.UserBoundary;
 import com.dts.bookies.rest.services.UserService;
 import com.dts.bookies.util.Constants;
 import com.dts.bookies.util.Functions;
 import com.dts.bookies.util.MySharedPreferences;
 import com.dts.bookies.util.PrefsKeys;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.gson.Gson;
 
 import retrofit2.Call;
@@ -45,6 +48,8 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+
 
         findViews();
         validEmail = false;

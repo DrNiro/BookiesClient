@@ -6,10 +6,12 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import com.dts.bookies.activities.LoginActivity;
 import com.dts.bookies.activities.MainPageActivity;
 import com.dts.bookies.activities.SignUpActivity;
+import com.dts.bookies.activities.fragments.MapFragment;
 import com.dts.bookies.util.MySharedPreferences;
 import com.dts.bookies.util.PrefsKeys;
 
@@ -24,6 +26,14 @@ public class StartingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starting);
+
+        //initialize fragment
+        Fragment fragment = new MapFragment();
+
+        //open fraagment
+        getSupportFragmentManager().beginTransaction()
+        .replace(R.id.frame_layout,fragment).commit();
+
 
         prefs = new MySharedPreferences(this);
 
