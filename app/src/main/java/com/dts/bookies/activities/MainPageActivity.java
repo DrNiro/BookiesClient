@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.dts.bookies.R;
 import com.dts.bookies.StartingActivity;
+import com.dts.bookies.activities.fragments.AddBookFragment;
 import com.dts.bookies.activities.fragments.MapFragment;
 import com.dts.bookies.activities.fragments.ProfileFragment;
 import com.dts.bookies.activities.fragments.SearchFragment;
@@ -28,11 +29,13 @@ public class MainPageActivity extends AppCompatActivity {
     private ProfileFragment profileFragment;
     private MapFragment mapFragment;
     private SearchFragment searchFragment;
+    private AddBookFragment addBookFragment;
 //    TODO: add book option in toolbar leads to a new activity which you create there, not another fragment.
 
     private ImageView main_BTN_profile;
     private ImageView main_BTN_map;
     private ImageView main_BTN_search;
+    private ImageView main_BTN_addBook;
 
     private Map<String, ImageView> imageButtonsMap;
     private Map<String, Fragment> fragmentsMap;
@@ -58,12 +61,16 @@ public class MainPageActivity extends AppCompatActivity {
 
         main_BTN_search.setOnClickListener(searchClickListener);
 
+        main_BTN_addBook.setOnClickListener(addClickListener);
+
+
     }
 
     private void findViews() {
         main_BTN_profile = findViewById(R.id.main_BTN_profile);
         main_BTN_map = findViewById(R.id.main_BTN_map);
         main_BTN_search = findViewById(R.id.main_BTN_search);
+        main_BTN_addBook = findViewById(R.id.main_BTN_addBook);
     }
 
     private void initFragmentsAndMemento() {
@@ -71,6 +78,7 @@ public class MainPageActivity extends AppCompatActivity {
         profileFragment.setCallback(buttonClickedCallback);
         mapFragment = new MapFragment();
         searchFragment = new SearchFragment();
+        addBookFragment = new AddBookFragment();
 
         mementoManager = new FragmentsMementoManager();
     }
@@ -80,11 +88,14 @@ public class MainPageActivity extends AppCompatActivity {
         imageButtonsMap.put(profileFragment.getClass().getSimpleName(), main_BTN_profile);
         imageButtonsMap.put(mapFragment.getClass().getSimpleName(), main_BTN_map);
         imageButtonsMap.put(searchFragment.getClass().getSimpleName(), main_BTN_search);
+        imageButtonsMap.put(addBookFragment.getClass().getSimpleName(), main_BTN_addBook);
 
         fragmentsMap = new HashMap<>();
         fragmentsMap.put(MementoStates.PROFILE_STATE, profileFragment);
         fragmentsMap.put(MementoStates.MAP_STATE, mapFragment);
         fragmentsMap.put(MementoStates.SEARCH_STATE, searchFragment);
+        fragmentsMap.put(MementoStates.ADD_STATE, addBookFragment);
+
     }
 
     private void stageFragments(Fragment firstFocusFrag) {
@@ -92,9 +103,11 @@ public class MainPageActivity extends AppCompatActivity {
         transaction.add(R.id.main_LAY_mainWindow, profileFragment);
         transaction.add(R.id.main_LAY_mainWindow, mapFragment);
         transaction.add(R.id.main_LAY_mainWindow, searchFragment);
+        transaction.add(R.id.main_LAY_mainWindow, addBookFragment);
         transaction.hide(profileFragment);
         transaction.hide(mapFragment);
         transaction.hide(searchFragment);
+        transaction.hide(addBookFragment);
         transaction.show(firstFocusFrag);
         transaction.commit();
 
@@ -172,6 +185,13 @@ public class MainPageActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             nextFragClick(mementoManager.getCurrentFragment(), searchFragment);
+        }
+    };
+    private View.OnClickListener addClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            Intent addActivityIntent = new Intent(getApplicationContext(), AddBookActivity.class);
+            startActivity(addActivityIntent);
         }
     };
 

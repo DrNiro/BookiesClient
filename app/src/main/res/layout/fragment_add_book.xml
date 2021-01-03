@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.fragments.AddBookFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/add_TXT_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:text="Add your book: "
+        android:textSize="30sp"
+        android:gravity="center"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"
+        />
+
+    <RelativeLayout
+        android:id="@+id/add_LAY_Add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_TXT_title"
+        android:layout_marginTop="50dp">
+
+        <EditText
+            android:id="@+id/add_EDT_BookName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:hint="Book name: "
+            android:inputType="text"
+            android:padding="10dp"
+            android:textSize="17sp" />
+        <EditText
+            android:id="@+id/add_EDT_genre"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:hint="Genre: "
+            android:inputType="text"
+            android:padding="10dp"
+            android:textSize="17sp"
+            android:layout_below="@id/add_EDT_BookName"/>
+
+        <EditText
+            android:id="@+id/add_EDT_Author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:hint="Author name: "
+            android:inputType="text"
+            android:padding="10dp"
+            android:textSize="17sp"
+            android:layout_below="@id/add_EDT_genre" />
+        <EditText
+            android:id="@+id/add_EDT_adstractSummery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="30dp"
+            android:hint="Summery: "
+            android:inputType="text"
+            android:padding="10dp"
+            android:textSize="17sp"
+            android:layout_below="@id/add_EDT_Author"/>
+        <Button
+            android:id="@+id/login_BTN_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/add_EDT_adstractSummery"
+            android:layout_marginLeft="45dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="45dp"
+            android:text="Submit"
+            android:textColor="@color/white"
+            android:textAllCaps="false"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+
+</FrameLayout>

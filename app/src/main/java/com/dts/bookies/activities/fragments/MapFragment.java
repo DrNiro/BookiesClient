@@ -78,9 +78,6 @@ public class MapFragment extends Fragment {
                         googleMap.addMarker(markerOptions);
 
 
-
-
-
                     }
                 });
             }

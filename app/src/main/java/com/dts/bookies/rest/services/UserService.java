@@ -2,11 +2,18 @@ package com.dts.bookies.rest.services;
 
 import android.util.Log;
 
+import com.dts.bookies.logic.boundaries.ItemBoundary;
 import com.dts.bookies.logic.boundaries.NewUserDetails;
 import com.dts.bookies.logic.boundaries.UserBoundary;
+import com.dts.bookies.logic.boundaries.subboundaries.ItemIdBoundary;
+import com.dts.bookies.logic.boundaries.subboundaries.LocationBoundary;
+import com.dts.bookies.logic.boundaries.subboundaries.User;
 import com.dts.bookies.logic.boundaries.subboundaries.UserRoleBoundary;
+import com.dts.bookies.rest.ItemApi;
 import com.dts.bookies.rest.UserApi;
 import com.dts.bookies.util.Constants;
+
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -34,6 +41,7 @@ public class UserService {
     public void initLoginUserCallback(Callback<UserBoundary> loginUserCallback) {
         this.loginUserCallback = loginUserCallback;
     }
+
 
     public void  initAllCallbacks(Callback<UserBoundary> createNewUserCallback,
                             Callback<Void> updateUserCallback,
@@ -95,16 +103,17 @@ public class UserService {
     }
 
     public void updateUser(String userSpace, String userEmail, UserBoundary update) {
-        if(this.updateUserCallback == null) {
+        if (this.updateUserCallback == null) {
             Log.d("vvv", "need to initialize callback first");
             return;
         }
 
-
-
         Call<Void> call = this.userApi.updateUser(userSpace, userEmail, update);
 
         call.enqueue(this.updateUserCallback);
+    }
+
+
 
 //        call.enqueue(new Callback<Void>() {
 //            @Override
@@ -119,4 +128,4 @@ public class UserService {
 //        });
     }
 
-}
+

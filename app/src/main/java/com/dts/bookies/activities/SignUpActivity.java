@@ -35,7 +35,7 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText signup_EDT_email;
     private EditText signup_EDT_password;
     private EditText signup_EDT_confirmPassword;
-    private Button signup_BTN_createAccount;
+    private Button   signup_BTN_createAccount;
 
 //    private final int NUM_OF_EDIT_TEXTS = 5;
 //    private boolean[] validations = new boolean[NUM_OF_EDIT_TEXTS];
