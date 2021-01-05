@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.dts.bookies.activities.MainPageActivity;
 import com.dts.bookies.logic.boundaries.UserBoundary;
+import com.dts.bookies.logic.boundaries.subboundaries.LocationBoundary;
 import com.dts.bookies.util.memento.Memento;
 import com.google.gson.Gson;
 
@@ -30,6 +31,7 @@ public class Functions {
         prefs.putInt(PrefsKeys.LOGGED_STATE, loggedIn);
     }
 
+
     public static UserBoundary getUserBoundaryFromPrefs(MySharedPreferences prefs) {
         String myUserJson = prefs.getString(PrefsKeys.USER_BOUNDARY, null);
         if(myUserJson != null) {
@@ -38,6 +40,7 @@ public class Functions {
             return null;
         }
     }
+
 
     public static void printMementoList(List<Memento> memList) {
         if(memList.size() == 0) {

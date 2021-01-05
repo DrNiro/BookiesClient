@@ -8,13 +8,15 @@
     tools:context=".activities.fragments.SearchFragment"
     android:padding="10dp">
 
-    <TextView
+   <!-- <TextView
         android:id="@+id/search_TXT_implementPageNote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="IMPLEMENT SEARCH PAGE"
         android:textSize="25dp"
         android:layout_centerInParent="true"
-        />
+        />-->
+
+
 
 </RelativeLayout>

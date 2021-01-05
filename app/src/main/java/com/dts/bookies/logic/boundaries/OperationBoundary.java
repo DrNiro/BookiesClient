@@ -19,7 +19,8 @@ public class OperationBoundary {
 		
 	}
 	
-	public OperationBoundary(OperationIdBoundary operationId, String type, Item item, Date createdTimestamp, User invokedBy,
+	public OperationBoundary(OperationIdBoundary operationId, String type, Item item,
+							 Date createdTimestamp, User invokedBy,
 			Map<String, Object> opertaionAttributes) {
 		setOperationId(operationId);
 		setType(type);
