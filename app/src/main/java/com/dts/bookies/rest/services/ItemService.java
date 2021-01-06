@@ -1,9 +1,12 @@
 package com.dts.bookies.rest.services;
 
+import android.util.Log;
+
 import com.dts.bookies.logic.boundaries.ItemBoundary;
 import com.dts.bookies.rest.ItemApi;
 import com.dts.bookies.util.Constants;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -21,6 +24,7 @@ public class ItemService {
     private Callback<ItemBoundary[]> getAllChildrenOfExistItemCallback;
     private Callback<Void> bindExistItemToExistChildItemCallback;
 
+
     public void initGetSpecificItemCallback(Callback<ItemBoundary> getSpecificItemCallback) {
         this.getSpecificItemCallback = getSpecificItemCallback;
     }
@@ -37,7 +41,7 @@ public class ItemService {
         this.createItemCallback = createItemCallback;
     }
 
-    public void initGetAllItemsCallbackS(Callback<ItemBoundary[]> getAllItemsCallback) {
+    public void initGetAllItemsCallback(Callback<ItemBoundary[]> getAllItemsCallback) {
         this.getAllItemsCallback = getAllItemsCallback;
     }
 
@@ -84,4 +88,27 @@ public class ItemService {
         return itemApi;
     }
 
+    public void createNewBookItem(String userSpace, String userEmail, ItemBoundary itemBoundary) {
+        if(this.createItemCallback == null) {
+            Log.d("vvv", "need to initialize callback first");
+            return;
+        }
+        Log.d("vvv", "2. in itemService");
+        Call<ItemBoundary> call = this.itemApi.createItem(userSpace,userEmail,itemBoundary);
+
+        call.enqueue(this.createItemCallback);
+
+    }
+
+    public void getAllBookItems(String userSpace, String userEmail) {
+        if(this.getAllItemsCallback == null) {
+            Log.d("vvv", "need to initialize callback first");
+            return;
+        }
+        Log.d("vvv", "2. in itemService");
+        Call<ItemBoundary[]> call = this.itemApi.getAllItems(userSpace,userEmail);
+
+        call.enqueue(this.getAllItemsCallback);
+
+    }
 }

@@ -8,13 +8,52 @@
     tools:context=".activities.fragments.SearchFragment"
     android:padding="10dp">
 
-    <TextView
+   <!-- <TextView
         android:id="@+id/search_TXT_implementPageNote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="IMPLEMENT SEARCH PAGE"
         android:textSize="25dp"
         android:layout_centerInParent="true"
-        />
+        />-->
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical">
+
+      <EditText
+          android:id="@+id/insert_EDT_BookName"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginLeft="30dp"
+          android:layout_marginTop="20dp"
+          android:layout_marginRight="30dp"
+          android:hint="Search Your Book... "
+          android:inputType="text"
+          android:padding="10dp"
+          android:textSize="17sp" />
+      <Button
+          android:id="@+id/searchFragment_BTN_search"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="Search"
+          android:layout_alignParentLeft="false"
+          android:layout_alignParentTop="false"
+          android:layout_marginLeft="5dp"
+          />
+
+
+
+   </LinearLayout>
+
+   <ProgressBar
+       android:id="@+id/Search_ProgressBar"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:layout_centerInParent="true"
+       android:padding="10dp"
+       />
+
+
 
 </RelativeLayout>

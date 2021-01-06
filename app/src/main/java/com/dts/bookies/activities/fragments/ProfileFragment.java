@@ -45,7 +45,8 @@ public class ProfileFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         if(view == null) {
             view = inflater.inflate(R.layout.fragment_profile, container, false);
         }
@@ -77,6 +78,8 @@ public class ProfileFragment extends Fragment {
 
     private void initProfile() {
         profile_TXT_username.setText(myUser.getUsername());
+
+
     }
 
 }

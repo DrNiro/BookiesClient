@@ -32,6 +32,7 @@ public class FragmentsMementoManager {
         this.mementoMap.put(ProfileFragment.class.getSimpleName(), new Memento(MementoStates.PROFILE_STATE));
         this.mementoMap.put(MapFragment.class.getSimpleName(), new Memento(MementoStates.MAP_STATE));
         this.mementoMap.put(SearchFragment.class.getSimpleName(), new Memento(MementoStates.SEARCH_STATE));
+
     }
 
     public Fragment getCurrentFragment() {

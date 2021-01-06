@@ -43,12 +43,20 @@
         android:textSize="16sp"
         />
 
-    <TextView
+  <!--  <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="implement map"
         android:layout_centerInParent="true"
         android:textSize="30sp"
         />
+-->
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/frame_layout"
+        android:layout_centerInParent="true"
+        android:layout_below="@id/starting_BTN_login"
+        />
 </RelativeLayout>
