@@ -100,4 +100,15 @@ public class ItemService {
 
     }
 
+    public void getAllBookItems(String userSpace, String userEmail) {
+        if(this.getAllItemsCallback == null) {
+            Log.d("vvv", "need to initialize callback first");
+            return;
+        }
+        Log.d("vvv", "2. in itemService");
+        Call<ItemBoundary[]> call = this.itemApi.getAllItems(userSpace,userEmail);
+
+        call.enqueue(this.getAllItemsCallback);
+
+    }
 }

@@ -1,6 +1,7 @@
 package com.dts.bookies.activities.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,86 +11,94 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.dts.bookies.R;
+import com.dts.bookies.logic.boundaries.ItemBoundary;
+import com.dts.bookies.logic.boundaries.UserBoundary;
+import com.dts.bookies.logic.boundaries.subboundaries.LocationBoundary;
+import com.dts.bookies.rest.services.ItemService;
+import com.dts.bookies.util.MySharedPreferences;
+import com.dts.bookies.util.PrefsKeys;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.gson.Gson;
 
-public class MapFragment extends Fragment {
+public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private View view = null;
+    private ItemBoundary[] itemBoundaryList;
+    private ItemService itemService;
+    private MySharedPreferences prefs;
+    private UserBoundary myUser;
+    private LocationBoundary myLocation;
 
-//    private CallBackClickedBtn callBackClickedBtn;
-
-//    public void setCallback(CallBackClickedBtn callback) {
-//        this.callBackClickedBtn = callback;
-//    }
+    private MapView mapView;
+    private GoogleMap mMap;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        if(view == null) {
+        if (view == null) {
             view = inflater.inflate(R.layout.fragment_map, container, false);
         }
 
-        //Initialize map fragment
-        SupportMapFragment supportMapFragment = (SupportMapFragment)
-        getChildFragmentManager().findFragmentById(R.id.google_map);
-
-
-
-        //Async Map
-        supportMapFragment.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap googleMap) {
-                LatLng israel = new LatLng(31.4117257, 35.0818155);
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(israel, 7));
-                //when map loaded
-                googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                    @Override
-                    public void onMapClick(LatLng latLng) {
-                        //when clicked on map
-                        //Initialize marker options
-                        MarkerOptions markerOptions = new MarkerOptions();
-
-                        //set positions of marker
-                        markerOptions.position(latLng);
-
-                        //set title of marker
-                        markerOptions.title(latLng.latitude + " :  "  + latLng.longitude);
-
-                        //remove all marker
-                        googleMap.clear();
-
-                        //Animating to zoom the marker
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                                latLng, 5
-                        ));
-
-                        //add marker on map
-                        googleMap.addMarker(markerOptions);
-
-
-                    }
-                });
-            }
-        });
-
         findViews();
+
+        prefs = new MySharedPreferences(view.getContext());
+        myLocation = new Gson().fromJson
+                (prefs.getString(PrefsKeys.LOCATION, ""), LocationBoundary.class);
 
         return view;
     }
 
     private void findViews() {
-//        profile_BTN_addBook = view.findViewById(R.id.profile_BTN_addBook);
+        mapView = view.findViewById(R.id.map_LAY_googleMapsHolder);
+        if (mapView != null) {
+            mapView.onCreate(null);
+            mapView.onResume();
+            mapView.getMapAsync(this);
+        }
+
     }
 
+
+    public void initialMap() {
+        String itemListJson = prefs.getString(PrefsKeys.ITEM_LIST, "");
+        itemBoundaryList = new Gson().fromJson(itemListJson, ItemBoundary[].class);
+
+        // iterate over item list
+        for (ItemBoundary item : itemBoundaryList) {
+            LatLng itemLtLg = new LatLng(item.getLocation().getLat(), item.getLocation().getLng());
+            String title = item.getName() + "," + (String) item.getItemAttributes().get("owner");
+            // add item location marker
+            mMap.addMarker(new MarkerOptions().position(itemLtLg).title(title));
+        }
+
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        MapsInitializer.initialize(getContext());
+        mMap = googleMap;
+        if (myLocation != null) {
+            LatLng myLatLan = new LatLng(myLocation.getLat(), myLocation.getLng());
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(myLatLan, 7));
+        } else {
+            LatLng israel = new LatLng(31.4117257, 35.0818155);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(israel, 7));
+        }
+
+        initialMap();
+    }
 }

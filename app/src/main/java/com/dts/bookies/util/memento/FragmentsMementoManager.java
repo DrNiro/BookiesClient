@@ -4,7 +4,6 @@ import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
-import com.dts.bookies.activities.fragments.AddBookFragment;
 import com.dts.bookies.activities.fragments.MapFragment;
 import com.dts.bookies.activities.fragments.ProfileFragment;
 import com.dts.bookies.activities.fragments.SearchFragment;
@@ -33,7 +32,6 @@ public class FragmentsMementoManager {
         this.mementoMap.put(ProfileFragment.class.getSimpleName(), new Memento(MementoStates.PROFILE_STATE));
         this.mementoMap.put(MapFragment.class.getSimpleName(), new Memento(MementoStates.MAP_STATE));
         this.mementoMap.put(SearchFragment.class.getSimpleName(), new Memento(MementoStates.SEARCH_STATE));
-        this.mementoMap.put(AddBookFragment.class.getSimpleName(), new Memento(MementoStates.ADD_STATE));
 
     }
 

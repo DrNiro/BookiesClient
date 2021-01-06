@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
@@ -20,13 +21,14 @@ import android.widget.Toast;
 
 import com.dts.bookies.R;
 import com.dts.bookies.StartingActivity;
-import com.dts.bookies.activities.fragments.AddBookFragment;
 import com.dts.bookies.activities.fragments.MapFragment;
 import com.dts.bookies.activities.fragments.ProfileFragment;
 import com.dts.bookies.activities.fragments.SearchFragment;
 import com.dts.bookies.callbacks.ButtonClickedCallback;
+import com.dts.bookies.logic.boundaries.ItemBoundary;
 import com.dts.bookies.logic.boundaries.UserBoundary;
 import com.dts.bookies.logic.boundaries.subboundaries.LocationBoundary;
+import com.dts.bookies.rest.services.ItemService;
 import com.dts.bookies.util.Functions;
 import com.dts.bookies.util.MySharedPreferences;
 import com.dts.bookies.util.PrefsKeys;
@@ -41,12 +43,15 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainPageActivity extends AppCompatActivity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class MainPageActivity extends FragmentActivity {
 
     private ProfileFragment profileFragment;
     private MapFragment mapFragment;
     private SearchFragment searchFragment;
-    private AddBookFragment addBookFragment;
     private LocationBoundary locationBoundary;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
 
@@ -63,19 +68,30 @@ public class MainPageActivity extends AppCompatActivity {
     private FragmentsMementoManager mementoManager;
     private MySharedPreferences prefs;
 
+    private ItemBoundary[] itemList;
+    private ItemService itemService;
+    private UserBoundary myUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
-        locationBoundary = new LocationBoundary(0.0, 0.0);
 
-        prefs = new MySharedPreferences(this);
 
         findViews();
         initFragmentsAndMemento();
         initMaps();
         stageFragments(profileFragment);
         permissionsForLocation();
+
+        locationBoundary = new LocationBoundary();
+        prefs = new MySharedPreferences(this);
+        itemService = new ItemService();
+        itemService.initGetAllItemsCallback(getAllItemsCallBack);
+        getUserFromPrefs();
+
+        itemService.getAllBookItems(myUser.getUserId().getSpace(),myUser.getUserId().getEmail());
+
         main_BTN_profile.setOnClickListener(profileClickListener);
 
         main_BTN_map.setOnClickListener(mapClickListener);
@@ -83,7 +99,6 @@ public class MainPageActivity extends AppCompatActivity {
         main_BTN_search.setOnClickListener(searchClickListener);
 
         main_BTN_addBook.setOnClickListener(addClickListener);
-
 
     }
 
@@ -100,7 +115,6 @@ public class MainPageActivity extends AppCompatActivity {
         profileFragment.setCallback(buttonClickedCallback);
         mapFragment = new MapFragment();
         searchFragment = new SearchFragment();
-        addBookFragment = new AddBookFragment();
 
         mementoManager = new FragmentsMementoManager();
     }
@@ -110,13 +124,11 @@ public class MainPageActivity extends AppCompatActivity {
         imageButtonsMap.put(profileFragment.getClass().getSimpleName(), main_BTN_profile);
         imageButtonsMap.put(mapFragment.getClass().getSimpleName(), main_BTN_map);
         imageButtonsMap.put(searchFragment.getClass().getSimpleName(), main_BTN_search);
-        imageButtonsMap.put(addBookFragment.getClass().getSimpleName(), main_BTN_addBook);
 
         fragmentsMap = new HashMap<>();
         fragmentsMap.put(MementoStates.PROFILE_STATE, profileFragment);
         fragmentsMap.put(MementoStates.MAP_STATE, mapFragment);
         fragmentsMap.put(MementoStates.SEARCH_STATE, searchFragment);
-        fragmentsMap.put(MementoStates.ADD_STATE, addBookFragment);
 
     }
 
@@ -125,11 +137,9 @@ public class MainPageActivity extends AppCompatActivity {
         transaction.add(R.id.main_LAY_mainWindow, profileFragment);
         transaction.add(R.id.main_LAY_mainWindow, mapFragment);
         transaction.add(R.id.main_LAY_mainWindow, searchFragment);
-        transaction.add(R.id.main_LAY_mainWindow, addBookFragment);
         transaction.hide(profileFragment);
         transaction.hide(mapFragment);
         transaction.hide(searchFragment);
-        transaction.hide(addBookFragment);
         transaction.show(firstFocusFrag);
         transaction.commit();
 
@@ -276,7 +286,8 @@ public class MainPageActivity extends AppCompatActivity {
                           //  Log.d("vvvvv", "latitude: " + longitude);
                             locationBoundary.setLat(latitude);
                             locationBoundary.setLng(longitude);
-                            prefs.putString("Location",locationBoundary.toString());
+                            String locationJson = new Gson().toJson(locationBoundary);
+                            prefs.putString(PrefsKeys.LOCATION, locationJson);
                             Log.d("vvvvv", "locationBoundary1: " +
                                     prefs.getString("Location", ""));
                             Log.d("vvvvv", "locationBoundary2: " + locationBoundary);
@@ -286,4 +297,37 @@ public class MainPageActivity extends AppCompatActivity {
                 }, Looper.myLooper());
     }
 
+    private void getUserFromPrefs() {
+        String userJson = prefs.getString(PrefsKeys.USER_BOUNDARY, "");
+        if (!userJson.equals("")) {
+            myUser = new Gson().fromJson(userJson, UserBoundary.class);
+        } else {
+            Log.d("vvv", "user not found in preferences");
+        }
+    }
+    private Callback<ItemBoundary[]> getAllItemsCallBack = new Callback<ItemBoundary[]>() {
+        @Override
+        public void onResponse(Call<ItemBoundary[]> call, Response<ItemBoundary[]> response) {
+            if(!response.isSuccessful()) {
+                if(response.code() == 404) {
+                    Log.d("vvv", "404: user not found");
+                }
+                Log.d("vvv", response.code() + ": " + response.message());
+                return;
+            }
+
+            itemList = response.body();
+            String itemListJson = new Gson().toJson(itemList);
+            prefs.putString(PrefsKeys.ITEM_LIST, itemListJson);
+//            mapFragment.initialMap();
+        }
+
+        @Override
+        public void onFailure(Call<ItemBoundary[]> call, Throwable t) {
+            Log.d("vvv", "failure login, message: " + t.getMessage());
+        }
+    };
+
 }
+
+
