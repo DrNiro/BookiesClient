@@ -7,6 +7,7 @@ public class CareTaker {
 
     private List<Memento> mementoList = new ArrayList<>();
 
+//    list values are unique. every time existing value added - change its index to be the last index.
     public void add(Memento state) {
         if(this.mementoList.contains(state)) {
             this.mementoList.remove(state);

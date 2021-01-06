@@ -21,30 +21,6 @@ public class ItemBoundary {
 	public ItemBoundary() {
 
 	}
-	
-//	dummy item boundary
-	public ItemBoundary(String name) {
-		setItemId(new ItemIdBoundary("itemSpace", "1"));
-		setType("type");
-		setName(name);
-		setActive(false);
-		setCreatedTimestamp(new Date());
-		setCreatedBy(new User(new UserIdBoundary("space", "name@org.com")));
-		setLocation(new LocationBoundary(15.5, 10.2));
-		setItemAttributes(null);
-	}
-
-//	dummy item boundary for 
-	public ItemBoundary(String userSpace, String userEmail, String itemSpace, String itemId) {
-		setItemId(new ItemIdBoundary("itemSpace" ,itemId));
-		setType("type");
-		setName(name);
-		setActive(false);
-		setCreatedTimestamp(new Date());
-		setCreatedBy(new User(new UserIdBoundary(userSpace, userEmail)));
-		setLocation(new LocationBoundary(15.5, 10.2));
-		setItemAttributes(null);
-	}
 
 	public ItemBoundary(ItemIdBoundary itemId, String type, String name, Boolean active, Date createdTimeStamp,
 			User createdBy, LocationBoundary location, Map<String, Object> itemAttributes) {

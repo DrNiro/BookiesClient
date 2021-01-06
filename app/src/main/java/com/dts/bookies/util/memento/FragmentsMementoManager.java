@@ -74,6 +74,10 @@ public class FragmentsMementoManager {
         return this.careTaker.getAndRemove(getMementoList().size() - 1);
     }
 
+    public void pullLastFromMemento() {
+        setOriginatorState(getAndRemoveLastMemento());
+    }
+
     public void saveToMemento(Fragment offFocusFragment, Fragment newFocusFragment) {
         String offFocusName = offFocusFragment.getClass().getSimpleName();
         String newFocusName = newFocusFragment.getClass().getSimpleName();

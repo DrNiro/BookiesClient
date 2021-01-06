@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AddBookActivity"
+    android:padding="10dp">
+
+    <RelativeLayout
+        android:id="@+id/addBook_LAY_topBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!--TODO: Auto complete book search-->
+        <EditText
+            android:id="@+id/addBook_EDT_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="search book..."
+            android:padding="12dp"
+            android:drawablePadding="10dp"
+            android:ems="10"
+            android:drawableLeft="@drawable/ic_baseline_search"
+            android:inputType="textAutoComplete"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/addBook_BTN_filter"
+            android:background="@drawable/background_search_edit_text" />
+
+        <ImageView
+            android:id="@+id/addBook_BTN_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_filter"
+            android:padding="12dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/addBook_EDT_search"
+            android:layout_alignBottom="@+id/addBook_EDT_search"
+
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/addBook_LAY_booksShower"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/addBook_LAY_topBar">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/addBook_RCL_books"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@color/gray"/>
+
+    </RelativeLayout>
+
+
+<!--    <androidx.drawerlayout.widget.DrawerLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_below="@+id/addBook_LAY_topBar">-->
+<!--        -->
+<!--        <com.google.android.material.navigation.NavigationView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="match_parent"-->
+<!--            app:menu=""/>-->
+<!--        -->
+<!--    </androidx.drawerlayout.widget.DrawerLayout>-->
+
+
+<!--    &lt;!&ndash;Open/Close layout. visible on filter-button click, gone when closing&ndash;&gt;-->
+<!--    <RelativeLayout-->
+<!--        android:id="@+id/addBook_LAY_filterMenu"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:visibility="visible"-->
+<!--        android:background="@color/white"-->
+<!--        android:layout_below="@+id/addBook_LAY_topBar"-->
+<!--        android:layout_alignParentRight="true"-->
+<!--        android:padding="15dp"-->
+<!--        >-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/addBook_TXT_filterPlaceholder1"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="filter placeholder #1"-->
+<!--            android:textSize="20dp"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:gravity="center"-->
+<!--            />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/addBook_TXT_filterPlaceholder2"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="filter placeholder #2"-->
+<!--            android:textSize="20dp"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:gravity="center"-->
+<!--            android:layout_below="@+id/addBook_TXT_filterPlaceholder1"-->
+<!--            />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/addBook_TXT_filterPlaceholder3"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="filter placeholder #3"-->
+<!--            android:textSize="20dp"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:gravity="center"-->
+<!--            android:layout_below="@+id/addBook_TXT_filterPlaceholder2"-->
+<!--            />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/addBook_TXT_filterPlaceholder4"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="filter placeholder #4"-->
+<!--            android:textSize="20dp"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:gravity="center"-->
+<!--            android:layout_below="@+id/addBook_TXT_filterPlaceholder3"-->
+<!--            />-->
+
+<!--    </RelativeLayout>-->
+
+</RelativeLayout>

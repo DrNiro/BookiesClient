@@ -10,4 +10,6 @@
 
     <color name="gray">#DADADA</color>
     <color name="lightest_gray">#39E4E4E4</color>
+
+    <color name="red">#FF0000</color>
 </resources>

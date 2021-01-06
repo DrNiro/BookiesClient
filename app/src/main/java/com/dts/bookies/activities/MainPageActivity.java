@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.dts.bookies.MapsActivity;
 import com.dts.bookies.R;
 import com.dts.bookies.StartingActivity;
 import com.dts.bookies.activities.fragments.MapFragment;
@@ -28,11 +29,11 @@ public class MainPageActivity extends AppCompatActivity {
     private ProfileFragment profileFragment;
     private MapFragment mapFragment;
     private SearchFragment searchFragment;
-//    TODO: add book option in toolbar leads to a new activity which you create there, not another fragment.
 
     private ImageView main_BTN_profile;
     private ImageView main_BTN_map;
     private ImageView main_BTN_search;
+    private ImageView main_BTN_addBook;
 
     private Map<String, ImageView> imageButtonsMap;
     private Map<String, Fragment> fragmentsMap;
@@ -56,6 +57,8 @@ public class MainPageActivity extends AppCompatActivity {
 
         main_BTN_map.setOnClickListener(mapClickListener);
 
+        main_BTN_addBook.setOnClickListener(addBookClickListener);
+
         main_BTN_search.setOnClickListener(searchClickListener);
 
     }
@@ -63,6 +66,7 @@ public class MainPageActivity extends AppCompatActivity {
     private void findViews() {
         main_BTN_profile = findViewById(R.id.main_BTN_profile);
         main_BTN_map = findViewById(R.id.main_BTN_map);
+        main_BTN_addBook = findViewById(R.id.main_BTN_addBook);
         main_BTN_search = findViewById(R.id.main_BTN_search);
     }
 
@@ -139,7 +143,7 @@ public class MainPageActivity extends AppCompatActivity {
 
     private void previousFragClick(Fragment currentFragment) {
 //        get last memento (last frag visited) and switch fragment focus
-        mementoManager.setOriginatorState(mementoManager.getAndRemoveLastMemento());
+        mementoManager.pullLastFromMemento();
         Fragment previousFrag = fragmentsMap.get(mementoManager.getOriginatorState());
         switchFragmentFocus(currentFragment, previousFrag);
     }
@@ -165,6 +169,15 @@ public class MainPageActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
             nextFragClick(mementoManager.getCurrentFragment(), mapFragment);
+        }
+    };
+
+    private View.OnClickListener addBookClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+//            Intent addBookActivityIntent = new Intent(getApplicationContext(), MapsActivity.class);
+            Intent addBookActivityIntent = new Intent(getApplicationContext(), AddBookActivity.class);
+            startActivity(addBookActivityIntent);
         }
     };
 

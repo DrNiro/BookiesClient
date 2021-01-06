@@ -19,11 +19,11 @@
             <RelativeLayout
                 android:id="@+id/profile_LAY_topPictures"
                 android:layout_width="match_parent"
-                android:layout_height="280dp">
+                android:layout_height="256dp">
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
+                    android:layout_height="176dp"
                     android:background="@color/gray" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
