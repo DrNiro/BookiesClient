@@ -30,9 +30,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private View view = null;
     private ItemBoundary[] itemBoundaryList;
-    private ItemService itemService;
     private MySharedPreferences prefs;
-    private UserBoundary myUser;
     private LocationBoundary myLocation;
 
     private MapView mapView;
