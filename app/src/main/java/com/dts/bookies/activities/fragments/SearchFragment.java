@@ -1,6 +1,7 @@
 package com.dts.bookies.activities.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +20,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.dts.bookies.R;
 import com.dts.bookies.activities.ItemAdapter;
 import com.dts.bookies.logic.boundaries.ItemBoundary;
+import com.dts.bookies.logic.boundaries.UserBoundary;
+import com.dts.bookies.rest.services.ItemService;
 import com.dts.bookies.util.MySharedPreferences;
 import com.dts.bookies.util.PrefsKeys;
 import com.google.gson.Gson;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SearchFragment extends Fragment {
     private TextView searchItem;
@@ -35,6 +42,9 @@ public class SearchFragment extends Fragment {
     "holech", "lashrotim"};
     private ItemBoundary[] itemBoundaryList;
     private MySharedPreferences prefs;
+
+    private ItemService itemService;
+    private UserBoundary myUser;
 
 
     @Override
@@ -52,6 +62,9 @@ public class SearchFragment extends Fragment {
             view = inflater.inflate(R.layout.fragment_search, container, false);
             findViews();
             prefs = new MySharedPreferences(view.getContext());
+            myUser = new UserBoundary();
+            itemService = new ItemService();
+            getUserFromPrefs();
             String itemListJson = prefs.getString(PrefsKeys.ITEM_LIST, "");
             itemBoundaryList = new Gson().fromJson(itemListJson, ItemBoundary[].class);
             layoutManager = new LinearLayoutManager(getContext());
@@ -74,4 +87,34 @@ public class SearchFragment extends Fragment {
         recyclerView = view.findViewById(R.id.search_RecyclerView);
         searchProgressBar.setVisibility(View.GONE);
     }
+
+    private void getUserFromPrefs() {
+        String userJson = prefs.getString(PrefsKeys.USER_BOUNDARY, "");
+        if (!userJson.equals("")) {
+            myUser = new Gson().fromJson(userJson, UserBoundary.class);
+        } else {
+            Log.d("vvv", "user not found in preferences");
+        }
+    }
+    private Callback<ItemBoundary[]> getAllItemsCallBack = new Callback<ItemBoundary[]>() {
+        @Override
+        public void onResponse(Call<ItemBoundary[]> call, Response<ItemBoundary[]> response) {
+            if(!response.isSuccessful()) {
+                if(response.code() == 404) {
+                    Log.d("vvv", "404: user not found");
+                }
+                Log.d("vvv", response.code() + ": " + response.message());
+                return;
+            }
+
+            itemBoundaryList = response.body();
+            adapter = new ItemAdapter(itemBoundaryList);
+            recyclerView.setAdapter(adapter);
+        }
+
+        @Override
+        public void onFailure(Call<ItemBoundary[]> call, Throwable t) {
+            Log.d("vvv", "failure login, message: " + t.getMessage());
+        }
+    };
 }

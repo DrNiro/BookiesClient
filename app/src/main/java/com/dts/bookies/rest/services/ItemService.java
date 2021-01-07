@@ -21,6 +21,7 @@ public class ItemService {
     private Callback<Void> updateItemCallback;
     private Callback<ItemBoundary> createItemCallback;
     private Callback<ItemBoundary[]> getAllItemsCallback;
+    private Callback<ItemBoundary[]> searchItemByNamePatternCallBack;
     private Callback<ItemBoundary[]> getAllChildrenOfExistItemCallback;
     private Callback<Void> bindExistItemToExistChildItemCallback;
 
@@ -45,6 +46,9 @@ public class ItemService {
         this.getAllItemsCallback = getAllItemsCallback;
     }
 
+    public void initSearchItemByNamePatternCallback(Callback<ItemBoundary[]> searchItemByNamePatternCallBack) {
+        this.searchItemByNamePatternCallBack = searchItemByNamePatternCallBack;
+    }
     public void initGetAllChildrenOfExistItemCallback(Callback<ItemBoundary[]> getAllChildrenOfExistItemCallback) {
         this.getAllChildrenOfExistItemCallback = getAllChildrenOfExistItemCallback;
     }
@@ -59,7 +63,8 @@ public class ItemService {
                                   Callback<ItemBoundary> createItemCallback,
                                   Callback<ItemBoundary[]> getAllItemsCallback,
                                   Callback<ItemBoundary[]> getAllChildrenOfExistItemCallback,
-                                  Callback<Void> bindExistItemToExistChildItemCallback) {
+                                  Callback<Void> bindExistItemToExistChildItemCallback,
+                                  Callback<ItemBoundary[]> searchItemByNamePatternCallBack) {
 
     }
 
