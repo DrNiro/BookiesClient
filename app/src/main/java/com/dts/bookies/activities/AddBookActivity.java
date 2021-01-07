@@ -20,8 +20,10 @@ import com.dts.bookies.booksAPI.exceptions.BookNotFoundException;
 import com.dts.bookies.booksAPI.rest.BooksAPIService;
 import com.dts.bookies.booksAPI.queries.QueryGenerator;
 import com.dts.bookies.logic.boundaries.ItemBoundary;
+import com.dts.bookies.logic.boundaries.OperationBoundary;
 import com.dts.bookies.logic.boundaries.UserBoundary;
 import com.dts.bookies.logic.boundaries.subboundaries.LocationBoundary;
+import com.dts.bookies.logic.boundaries.subboundaries.User;
 import com.dts.bookies.rest.services.OperationService;
 import com.dts.bookies.util.MySharedPreferences;
 import com.dts.bookies.util.PrefsKeys;
@@ -29,7 +31,9 @@ import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -93,6 +97,7 @@ public class AddBookActivity extends AppCompatActivity {
                     add_EDT_title.setError("must enter title");
                     return;
                 }
+
                 String author = add_EDT_author.getText().toString();
                 String publisher = add_EDT_publisher.getText().toString();
                 String subject = add_EDT_subject.getText().toString();
@@ -109,15 +114,10 @@ public class AddBookActivity extends AppCompatActivity {
                 queryGenerator.setLccn(lccn);
                 queryGenerator.setOclc(oclc);
 
-
                 String q = queryGenerator.genQ();
                 Log.d("aaa", q);
                 // call api function.
                 booksAPIService.getBooksWithApi(q, "AIzaSyBZF6LHJsVR6sSmhXMQUKC7ZS0xlFqtkgQ");
-
-//                booksAPIService.getBooksSpecificUri();
-//                while(booksApiRunning) { /*do nothing*/ }
-                booksApiRunning = true;
 
                 Log.d("aaa", "after book-api call");
 //                OperationBoundary operationBoundary = new OperationBoundary();
@@ -168,42 +168,6 @@ public class AddBookActivity extends AppCompatActivity {
         add_BTN_submit = findViewById(R.id.add_BTN_submit);
     }
 
-    private Callback<Object> invokeCreatenewItemCallback = new Callback<Object>() {
-        @Override
-        public void onResponse(Call<Object> call, Response<Object> response) {
-            if (!response.isSuccessful()) {
-                Log.d("vvv", response.code() + ": " + response.message());
-                return;
-            }
-
-            Log.d("aaa", "in create new item.");
-
-//            TODO: make this shit work async
-//            while(!googleBooksResponseReceived) {
-//                Log.d("aaa", "not received, waiting...");
-//                wait(1000);
-//            }
-
-            Log.d("aaa", "received book.");
-
-//            successful, create user.
-            ItemBoundary newItem = new Gson().fromJson(new Gson().toJsonTree(response.body()).getAsJsonObject(), ItemBoundary.class);
-
-//            move to profile/main page.
-            Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
-            startActivity(mainPageActivityIntent);
-            AddBookActivity.this.finish();
-
-//            pop-up account created successfully.
-            Toast.makeText(AddBookActivity.this, "Book created", Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onFailure(Call<Object> call, Throwable t) {
-            Log.d("vvv", "FAILED " + t.getMessage());
-        }
-    };
-
     private Callback<BooksResults> getBooksWithApiCallback = new Callback<BooksResults>() {
         @Override
         public void onResponse(Call<BooksResults> call, Response<BooksResults> response) {
@@ -218,22 +182,72 @@ public class AddBookActivity extends AppCompatActivity {
             BooksResults booksResults = response.body();
 
             if (booksResults == null || booksResults.getTotalItems() < 1) {
-                throw new BookNotFoundException("Book not found");
+                Log.d("aaa", "book not found");
+//                throw new BookNotFoundException("Book not found");
             }
 
             final List<Result> results = booksResults.getItems();
             if (results == null || results.size() < 1) {
-                throw new BookNotFoundException("Invalid items list");
+                Log.d("aaa", "invalid items list");
+//                throw new BookNotFoundException("Invalid items list");
             }
+
+            // show results in recyclerView.
+
             final Book book = results.get(0).getBook();
 
-            booksApiRunning = false;
+
+            OperationBoundary operationBoundary = new OperationBoundary();
+            Map<String, Object> itemAttributes = new HashMap<>();
+            Map<String, Object> operationsAttributes = new HashMap<String, Object>();
+
+            operationBoundary.setType("createNewBook");
+            itemAttributes.put("googleBook", book);
+            operationsAttributes.put("owner", myUser.getUsername());
+            operationsAttributes.put("bookName", book.getTitle());
+            operationsAttributes.put("bookLocation", myLocation);
+            operationsAttributes.put("bookAttributes", itemAttributes);
+
+            operationBoundary.setInvokedBy(new User(myUser.getUserId()));
+            operationBoundary.setOperationAttributes(operationsAttributes);
+
+            operationService.invokeOperation(operationBoundary);
         }
 
         @Override
         public void onFailure(Call<BooksResults> call, Throwable t) {
             booksApiRunning = false;
             Log.d("aaa", t.getMessage() + " (failed).");
+        }
+    };
+
+    private Callback<Object> invokeCreatenewItemCallback = new Callback<Object>() {
+        @Override
+        public void onResponse(Call<Object> call, Response<Object> response) {
+            if (!response.isSuccessful()) {
+                Log.d("vvv", response.code() + ": " + response.message());
+                return;
+            }
+
+            Log.d("aaa", "in create new item, received book.");
+
+//            successful, create user.
+            ItemBoundary newItem = new Gson().fromJson(new Gson().toJsonTree(response.body()).getAsJsonObject(), ItemBoundary.class);
+
+            Log.d("aaa", "item: " + newItem.toString());
+
+//            move to profile/main page.
+            Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
+            startActivity(mainPageActivityIntent);
+            AddBookActivity.this.finish();
+
+//            pop-up account created successfully.
+            Toast.makeText(AddBookActivity.this, "Book created", Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onFailure(Call<Object> call, Throwable t) {
+            Log.d("vvv", "FAILED " + t.getMessage());
         }
     };
 

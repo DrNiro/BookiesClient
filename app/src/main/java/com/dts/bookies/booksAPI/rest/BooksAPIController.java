@@ -15,6 +15,8 @@ import retrofit2.http.Query;
 
 public interface BooksAPIController {
 
+//    TODO: max results: 20.
+
     @GET("books/v1/volumes")
     public Call<BooksResults> getBooks(@Query("q") String q,
                                        @Query("key") String keyAPI);
