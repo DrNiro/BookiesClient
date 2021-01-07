@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
-    tools:context=".activities.AddBookActivity">
+>
+<!--    tools:context=".activities.AddBookActivity" -->
 
     <TextView
         android:id="@+id/add_TXT_title"
@@ -29,7 +30,7 @@
         android:layout_marginTop="50dp">
 
         <EditText
-            android:id="@+id/add_EDT_BookName"
+            android:id="@+id/add_EDT_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
@@ -40,7 +41,7 @@
             android:padding="10dp"
             android:textSize="17sp" />
         <EditText
-            android:id="@+id/add_EDT_genre"
+            android:id="@+id/add_EDT_author"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
@@ -50,10 +51,10 @@
             android:inputType="text"
             android:padding="10dp"
             android:textSize="17sp"
-            android:layout_below="@id/add_EDT_BookName"/>
+            android:layout_below="@id/add_EDT_title"/>
 
         <EditText
-            android:id="@+id/add_EDT_Author"
+            android:id="@+id/add_EDT_publisher"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
@@ -63,9 +64,9 @@
             android:inputType="text"
             android:padding="10dp"
             android:textSize="17sp"
-            android:layout_below="@id/add_EDT_genre" />
+            android:layout_below="@id/add_EDT_author" />
         <EditText
-            android:id="@+id/add_EDT_adstractSummery"
+            android:id="@+id/add_EDT_subject"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="30dp"
@@ -75,12 +76,12 @@
             android:inputType="text"
             android:padding="10dp"
             android:textSize="17sp"
-            android:layout_below="@id/add_EDT_Author"/>
+            android:layout_below="@id/add_EDT_publisher"/>
         <Button
-            android:id="@+id/add_BTN_Submit"
+            android:id="@+id/add_BTN_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/add_EDT_adstractSummery"
+            android:layout_below="@id/add_EDT_subject"
             android:layout_marginLeft="45dp"
             android:layout_marginTop="30dp"
             android:layout_marginRight="45dp"

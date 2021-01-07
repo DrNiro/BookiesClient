@@ -1,127 +1,152 @@
 package com.dts.bookies.activities;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.dts.bookies.R;
-import com.dts.bookies.activities.fragments.MapFragment;
+import com.dts.bookies.booksAPI.entities.Book;
+import com.dts.bookies.booksAPI.entities.BooksResults;
+import com.dts.bookies.booksAPI.entities.Result;
+import com.dts.bookies.booksAPI.exceptions.BookNotFoundException;
+import com.dts.bookies.booksAPI.rest.BooksAPIService;
+import com.dts.bookies.booksAPI.queries.QueryGenerator;
 import com.dts.bookies.logic.boundaries.ItemBoundary;
-import com.dts.bookies.logic.boundaries.OperationBoundary;
 import com.dts.bookies.logic.boundaries.UserBoundary;
 import com.dts.bookies.logic.boundaries.subboundaries.LocationBoundary;
-import com.dts.bookies.logic.boundaries.subboundaries.User;
-import com.dts.bookies.rest.services.ItemService;
 import com.dts.bookies.rest.services.OperationService;
-import com.dts.bookies.rest.services.UserService;
-import com.dts.bookies.util.Constants;
-import com.dts.bookies.util.Functions;
 import com.dts.bookies.util.MySharedPreferences;
 import com.dts.bookies.util.PrefsKeys;
 import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.json.JSONObject;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class AddBookActivity extends AppCompatActivity {
     private OperationService operationService;
+    private BooksAPIService booksAPIService;
+    boolean booksApiRunning = true;
+
     private UserBoundary myUser;
-    private User user;
-    private OperationBoundary operationBoundary;
-    private Map<String, Object> itemDetails;
-    private Map<String, Object> operationsAttributes;
     private LocationBoundary myLocation;
 
-    private TextView add_TXT_name;
-    private TextView add_TXT_author;
-    private TextView add_TET_genre;
-    private TextView add_TXT_summery;
-    private Button add_BTN_submit;
     private MySharedPreferences prefs;
+
+    private ImageView addBook_BTN_filter;
+    private EditText add_EDT_title;
+    private EditText add_EDT_author;
+    private EditText add_EDT_publisher;
+    private EditText add_EDT_subject;
+    private EditText add_EDT_isbn;
+    private EditText add_EDT_lccn;
+    private EditText add_EDT_oclc;
+    private Button add_BTN_submit;
+    private RelativeLayout add_LAY_advOptions;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_book);
+        setContentView(R.layout.activity_add_book_with_api);
 
         findViews();
 
         prefs = new MySharedPreferences(this);
-        getUserFromPrefs();
-        /*FragmentManager fragmentManager = getSupportFragmentManager();
-        final FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        final MapFragment mapFragment = new MapFragment();
-        Bundle b = new Bundle();
-        b.putString("space", myUser.getUserId().getSpace());
-        b.putString("email",myUser.getUserId().getEmail());
-        mapFragment.setArguments(b);
-        fragmentTransaction.add(R.id.frame_layout, mapFragment).commit();*/
-        /*// set Fragmentclass Arguments
-        MapFragment mapFragment = new MapFragment();
-        mapFragment.setArguments(bundle);*/
+        setUserFromPrefs();
 
         operationService = new OperationService();
         operationService.initInvokeCallback(invokeCreatenewItemCallback);
-        itemDetails = new HashMap<String, Object>();
-        operationsAttributes = new HashMap<String, Object>();
-        myLocation = new Gson().fromJson
-                (prefs.getString(PrefsKeys.LOCATION, ""), LocationBoundary.class);
-        user = new User();
+        booksAPIService = new BooksAPIService();
+        booksAPIService.initGetBooksCallback(getBooksWithApiCallback);
+
+        addBook_BTN_filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(add_LAY_advOptions.getVisibility() == View.VISIBLE) {
+                    add_LAY_advOptions.setVisibility(View.GONE);
+                } else {
+                    add_LAY_advOptions.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
+        myLocation = new Gson().fromJson(prefs.getString(PrefsKeys.LOCATION, ""), LocationBoundary.class);
         add_BTN_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String bookName = add_TXT_name.getText().toString();
-                String author = add_TXT_author.getText().toString();
-                String genre = add_TET_genre.getText().toString();
-                String summery = add_TXT_summery.getText().toString();
+                String title = add_EDT_title.getText().toString();
+                if(title.trim().equals("")) {
+                    add_EDT_title.setError("must enter title");
+                    return;
+                }
+                String author = add_EDT_author.getText().toString();
+                String publisher = add_EDT_publisher.getText().toString();
+                String subject = add_EDT_subject.getText().toString();
+                String isbn = add_EDT_isbn.getText().toString();
+                String lccn = add_EDT_lccn.getText().toString();
+                String oclc = add_EDT_oclc.getText().toString();
 
-                operationBoundary = new OperationBoundary();
-                operationBoundary.setType("createNewBook");
-                itemDetails.put("author", author);
-                itemDetails.put("genre", genre);
-                itemDetails.put("summery", summery);
-                itemDetails.put("owner", myUser.getUsername());
-                operationsAttributes.put("bookName", bookName);
-                operationsAttributes.put("bookLocation", myLocation);
-                operationsAttributes.put("bookAttributes", itemDetails);
-                user.setUserId(myUser.getUserId());
-                operationBoundary.setInvokedBy(user);
-                operationBoundary.setOperationAttributes(operationsAttributes);
+                QueryGenerator queryGenerator = new QueryGenerator();
+                queryGenerator.setIntitle(title);
+                queryGenerator.setInauthor(author);
+                queryGenerator.setInpublisher(publisher);
+                queryGenerator.setSubject(subject);
+                queryGenerator.setIsbn(isbn);
+                queryGenerator.setLccn(lccn);
+                queryGenerator.setOclc(oclc);
 
-                operationService.invokeOperation(operationBoundary);
 
+                String q = queryGenerator.genQ();
+                Log.d("aaa", q);
+                // call api function.
+                booksAPIService.getBooksWithApi(q, "AIzaSyBZF6LHJsVR6sSmhXMQUKC7ZS0xlFqtkgQ");
+
+//                booksAPIService.getBooksSpecificUri();
+//                while(booksApiRunning) { /*do nothing*/ }
+                booksApiRunning = true;
+
+                Log.d("aaa", "after book-api call");
+//                OperationBoundary operationBoundary = new OperationBoundary();
+//                Map<String, Object> itemAttributes = new HashMap<String, Object>();
+//                Map<String, Object> operationsAttributes = new HashMap<String, Object>();
+
+//                operationBoundary.setType("createNewBook");
+//                itemAttributes.put("title", title);
+//                itemAttributes.put("author", author);
+//                itemAttributes.put("publisher", publisher);
+//                itemAttributes.put("subject", subject);
+//                itemAttributes.put("isbn", isbn);
+//                itemAttributes.put("lccn", lccn);
+//                itemAttributes.put("oclc", oclc);
+//                operationsAttributes.put("owner", myUser.getUsername());
+//                operationsAttributes.put("bookName", title);
+//                operationsAttributes.put("bookLocation", myLocation);
+//                operationsAttributes.put("bookAttributes", itemAttributes);
+//
+//                operationBoundary.setInvokedBy(new User(myUser.getUserId()));
+//                operationBoundary.setOperationAttributes(operationsAttributes);
+
+//                operationService.invokeOperation(operationBoundary);
             }
         });
 
-
     }
 
-
-
-    private void getUserFromPrefs() {
+    private void setUserFromPrefs() {
         String userJson = prefs.getString(PrefsKeys.USER_BOUNDARY, "");
         if (!userJson.equals("")) {
             myUser = new Gson().fromJson(userJson, UserBoundary.class);
@@ -130,13 +155,17 @@ public class AddBookActivity extends AppCompatActivity {
         }
     }
 
-
     private void findViews() {
-        add_TXT_name = findViewById(R.id.add_EDT_BookName);
-        add_TXT_author = findViewById(R.id.add_EDT_Author);
-        add_TET_genre = findViewById(R.id.add_EDT_genre);
-        add_TXT_summery = findViewById(R.id.add_EDT_adstractSummery);
-        add_BTN_submit = findViewById(R.id.add_BTN_Submit);
+        add_LAY_advOptions = findViewById(R.id.add_LAY_advOptions);
+        addBook_BTN_filter = findViewById(R.id.addBook_BTN_filter);
+        add_EDT_title = findViewById(R.id.add_EDT_title);
+        add_EDT_author = findViewById(R.id.add_EDT_author);
+        add_EDT_publisher = findViewById(R.id.add_EDT_publisher);
+        add_EDT_subject = findViewById(R.id.add_EDT_subject);
+        add_EDT_isbn = findViewById(R.id.add_EDT_isbn);
+        add_EDT_lccn = findViewById(R.id.add_EDT_lccn);
+        add_EDT_oclc = findViewById(R.id.add_EDT_oclc);
+        add_BTN_submit = findViewById(R.id.add_BTN_submit);
     }
 
     private Callback<Object> invokeCreatenewItemCallback = new Callback<Object>() {
@@ -144,20 +173,21 @@ public class AddBookActivity extends AppCompatActivity {
         public void onResponse(Call<Object> call, Response<Object> response) {
             if (!response.isSuccessful()) {
                 Log.d("vvv", response.code() + ": " + response.message());
-                if (response.code() == 400) {
-                    //signup_EDT_email.setError("email already exist ");
-                    Log.d("vvv", " already exist by this email");
-                }
                 return;
             }
-            Log.d("vvv", "3. in callback");
+
+            Log.d("aaa", "in create new item.");
+
+//            TODO: make this shit work async
+//            while(!googleBooksResponseReceived) {
+//                Log.d("aaa", "not received, waiting...");
+//                wait(1000);
+//            }
+
+            Log.d("aaa", "received book.");
+
 //            successful, create user.
             ItemBoundary newItem = new Gson().fromJson(new Gson().toJsonTree(response.body()).getAsJsonObject(), ItemBoundary.class);
-            ;
-
-
-            Log.d("vvv", "new user: " + operationBoundary.toString());
-
 
 //            move to profile/main page.
             Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
@@ -165,12 +195,45 @@ public class AddBookActivity extends AppCompatActivity {
             AddBookActivity.this.finish();
 
 //            pop-up account created successfully.
-            Toast.makeText(AddBookActivity.this, "Book created and added", Toast.LENGTH_LONG).show();
+            Toast.makeText(AddBookActivity.this, "Book created", Toast.LENGTH_LONG).show();
         }
 
         @Override
         public void onFailure(Call<Object> call, Throwable t) {
             Log.d("vvv", "FAILED " + t.getMessage());
+        }
+    };
+
+    private Callback<BooksResults> getBooksWithApiCallback = new Callback<BooksResults>() {
+        @Override
+        public void onResponse(Call<BooksResults> call, Response<BooksResults> response) {
+            if (!response.isSuccessful()) {
+                Log.d("aaa", response.code() + ": " + response.message());
+                booksApiRunning = false;
+                return;
+            }
+
+            Log.d("aaa", "success" + response.body().getItems().size());
+
+            BooksResults booksResults = response.body();
+
+            if (booksResults == null || booksResults.getTotalItems() < 1) {
+                throw new BookNotFoundException("Book not found");
+            }
+
+            final List<Result> results = booksResults.getItems();
+            if (results == null || results.size() < 1) {
+                throw new BookNotFoundException("Invalid items list");
+            }
+            final Book book = results.get(0).getBook();
+
+            booksApiRunning = false;
+        }
+
+        @Override
+        public void onFailure(Call<BooksResults> call, Throwable t) {
+            booksApiRunning = false;
+            Log.d("aaa", t.getMessage() + " (failed).");
         }
     };
 

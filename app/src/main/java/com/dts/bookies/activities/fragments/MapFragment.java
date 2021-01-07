@@ -98,7 +98,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             LatLng israel = new LatLng(31.4117257, 35.0818155);
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(israel, 7));
         }
+        if(itemBoundaryList != null && itemBoundaryList.length > 0) {
+            initialMap();
+        }
 
-        initialMap();
     }
 }
