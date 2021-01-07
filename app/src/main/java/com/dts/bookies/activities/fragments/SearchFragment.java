@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -70,8 +71,8 @@ public class SearchFragment extends Fragment {
             recyclerView.setLayoutManager(layoutManager);
 
             //loads the itemlist to the recyclerView
-         //   adapter = new ItemAdapter(itemBoundaryList);
-          //  recyclerView.setAdapter(adapter);
+            //adapter = new ItemAdapter(itemBoundaryList);
+            //recyclerView.setAdapter(adapter);
 
             Log.d("vvv122", myUser.getUserId().getSpace());
             itemService.initSearchItemsByNameCallBack(searchBookItemByNameCallBack);
@@ -80,11 +81,12 @@ public class SearchFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     searchProgressBar.setVisibility(View.VISIBLE);
-                    Log.d("vvv124", myUser.getUserId().getSpace());
+                    String search = searchItem.getText().toString();
+               //     Log.d("vvv",search);
+                  //  Log.d("vvv124", myUser.getUserId().getSpace());
                     itemService.searchItemsByName(myUser.getUserId().getSpace(),
-                            myUser.getUserId().getEmail(),
-                            searchItem.toString());
-                    searchProgressBar.setVisibility(View.GONE);
+                            myUser.getUserId().getEmail(),search
+                            );
                 }
             });
 
@@ -124,10 +126,12 @@ public class SearchFragment extends Fragment {
                 Log.d("vvv", response.code() + ": " + response.message());
                 return;
             }
-
+           // Log.d("vvv156",   "" + itemBoundaryList.length);
             itemBoundaryList = response.body();
+            Log.d("vvv157",   "" + itemBoundaryList.length);
             adapter = new ItemAdapter(itemBoundaryList);
             recyclerView.setAdapter(adapter);
+            searchProgressBar.setVisibility(View.GONE);
 
         }
 
