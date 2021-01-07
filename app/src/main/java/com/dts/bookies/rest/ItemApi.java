@@ -53,9 +53,9 @@ public interface ItemApi {
                                               @Path("itemId") String itemId,
                                               @Body ItemIdBoundary item);
 
-    @GET("/dts/items/{userSpace}/{userEmail}/search/byNamePattern/{namePattern}")
-    public Call<ItemBoundary[]> searchItemByNamePattern(@Path("userSpace") String userSpace,
-                                                        @Path("userEmail") String userEmail,
-                                                        @Path("namePattern") String namePattern);
 
+    @GET("/dts/items/{userSpace}/{userEmail}/search/byNamePattern/{namePattern}")
+    public Call<ItemBoundary[]> searchItemsByNamePattern(@Path("userSpace") String userSpace,
+                                                          @Path("userEmail") String userEmail,
+                                                          @Path("namePattern") String namePattern);
 }

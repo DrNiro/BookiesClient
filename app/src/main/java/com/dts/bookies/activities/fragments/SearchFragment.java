@@ -5,9 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -42,9 +40,9 @@ public class SearchFragment extends Fragment {
     "holech", "lashrotim"};
     private ItemBoundary[] itemBoundaryList;
     private MySharedPreferences prefs;
-
-    private ItemService itemService;
     private UserBoundary myUser;
+    private ItemService itemService;
+
 
 
     @Override
@@ -62,7 +60,8 @@ public class SearchFragment extends Fragment {
             view = inflater.inflate(R.layout.fragment_search, container, false);
             findViews();
             prefs = new MySharedPreferences(view.getContext());
-            myUser = new UserBoundary();
+
+        //    myUser = new UserBoundary();
             itemService = new ItemService();
             getUserFromPrefs();
             String itemListJson = prefs.getString(PrefsKeys.ITEM_LIST, "");
@@ -71,8 +70,23 @@ public class SearchFragment extends Fragment {
             recyclerView.setLayoutManager(layoutManager);
 
             //loads the itemlist to the recyclerView
-            adapter = new ItemAdapter(itemBoundaryList);
-            recyclerView.setAdapter(adapter);
+         //   adapter = new ItemAdapter(itemBoundaryList);
+          //  recyclerView.setAdapter(adapter);
+
+            Log.d("vvv122", myUser.getUserId().getSpace());
+            itemService.initSearchItemsByNameCallBack(searchBookItemByNameCallBack);
+            Log.d("vvv123", myUser.getUserId().getSpace());
+            searchButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    searchProgressBar.setVisibility(View.VISIBLE);
+                    Log.d("vvv124", myUser.getUserId().getSpace());
+                    itemService.searchItemsByName(myUser.getUserId().getSpace(),
+                            myUser.getUserId().getEmail(),
+                            searchItem.toString());
+                    searchProgressBar.setVisibility(View.GONE);
+                }
+            });
 
 
         }
@@ -92,11 +106,15 @@ public class SearchFragment extends Fragment {
         String userJson = prefs.getString(PrefsKeys.USER_BOUNDARY, "");
         if (!userJson.equals("")) {
             myUser = new Gson().fromJson(userJson, UserBoundary.class);
+
+            Log.d("vvv121", myUser.getUserId().getSpace());
+
         } else {
             Log.d("vvv", "user not found in preferences");
         }
     }
-    private Callback<ItemBoundary[]> getAllItemsCallBack = new Callback<ItemBoundary[]>() {
+
+    private Callback<ItemBoundary[]> searchBookItemByNameCallBack = new Callback<ItemBoundary[]>() {
         @Override
         public void onResponse(Call<ItemBoundary[]> call, Response<ItemBoundary[]> response) {
             if(!response.isSuccessful()) {
@@ -110,6 +128,7 @@ public class SearchFragment extends Fragment {
             itemBoundaryList = response.body();
             adapter = new ItemAdapter(itemBoundaryList);
             recyclerView.setAdapter(adapter);
+
         }
 
         @Override
@@ -117,4 +136,5 @@ public class SearchFragment extends Fragment {
             Log.d("vvv", "failure login, message: " + t.getMessage());
         }
     };
+
 }

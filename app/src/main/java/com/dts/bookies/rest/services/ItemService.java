@@ -57,6 +57,10 @@ public class ItemService {
         this.bindExistItemToExistChildItemCallback = bindExistItemToExistChildItemCallback;
     }
 
+    public void initSearchItemsByNameCallBack(Callback<ItemBoundary[]> searchItemByNamePatternCallBack) {
+        this.searchItemByNamePatternCallBack = searchItemByNamePatternCallBack;
+    }
+
     public void initAllCallbacks(Callback<ItemBoundary> getSpecificItemCallback,
                                   Callback<ItemBoundary[]> getItemParentsCallback,
                                   Callback<Void> updateItemCallback,
@@ -64,7 +68,7 @@ public class ItemService {
                                   Callback<ItemBoundary[]> getAllItemsCallback,
                                   Callback<ItemBoundary[]> getAllChildrenOfExistItemCallback,
                                   Callback<Void> bindExistItemToExistChildItemCallback,
-                                  Callback<ItemBoundary[]> searchItemByNamePatternCallBack) {
+                                 Callback<ItemBoundary[]> searchItemByNamePatternCallBack) {
 
     }
 
@@ -114,6 +118,18 @@ public class ItemService {
         Call<ItemBoundary[]> call = this.itemApi.getAllItems(userSpace,userEmail);
 
         call.enqueue(this.getAllItemsCallback);
+
+    }
+
+    public void searchItemsByName(String userSpace, String userEmail, String namePattern) {
+        if(this.searchItemByNamePatternCallBack == null) {
+            Log.d("vvv", "need to initialize callback first");
+            return;
+        }
+        Log.d("vvv", "2. in itemService");
+        Call<ItemBoundary[]> call = this.itemApi.searchItemsByNamePattern(userSpace,userEmail,namePattern);
+
+        call.enqueue(this.searchItemByNamePatternCallBack);
 
     }
 }
