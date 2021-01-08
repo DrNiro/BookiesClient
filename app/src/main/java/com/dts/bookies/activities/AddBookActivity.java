@@ -157,22 +157,20 @@ public class AddBookActivity extends AppCompatActivity {
             }
 
             BooksResults booksResults = response.body();
-            final List<Result> results = booksResults.getItems();
-
-
             if (booksResults == null || booksResults.getTotalItems() < 1) {
                 Log.d("aaa", "book not found");
 //                throw new BookNotFoundException("Book not found");
             }
 
+            final List<Result> results = booksResults.getItems();
             if (results == null || results.size() < 1) {
                 Log.d("aaa", "invalid items list");
 //                throw new BookNotFoundException("Invalid items list");
             }
 
             Log.d("aaa", "success: " + results.size() + " books.");
-            Log.d("aaa", results.get(0).getBook().getTitle());
             Log.d("aaa", results.get(0).getBook().toString());
+
             // show results in recyclerView.
             createBookResultsRecycler(results);
 
