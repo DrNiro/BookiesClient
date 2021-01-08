@@ -37,7 +37,6 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Title"
-                android:maxLength="20"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:layout_margin="3dp"
@@ -69,7 +68,7 @@
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textSize="12sp"
-                android:text="Owner"
+                android:text="Lang and Date"
                 android:layout_margin="3dp"
                 android:layout_below="@+id/list_item_TXT_bookAuthor"
                 />

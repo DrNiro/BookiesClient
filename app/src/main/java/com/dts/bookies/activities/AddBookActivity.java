@@ -11,12 +11,13 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dts.bookies.R;
-import com.dts.bookies.booksAPI.entities.Book;
+import com.dts.bookies.adapters.recycler.GoogleBooksAdapter;
 import com.dts.bookies.booksAPI.entities.BooksResults;
 import com.dts.bookies.booksAPI.entities.Result;
-import com.dts.bookies.booksAPI.exceptions.BookNotFoundException;
 import com.dts.bookies.booksAPI.rest.BooksAPIService;
 import com.dts.bookies.booksAPI.queries.QueryGenerator;
 import com.dts.bookies.logic.boundaries.ItemBoundary;
@@ -29,8 +30,6 @@ import com.dts.bookies.util.MySharedPreferences;
 import com.dts.bookies.util.PrefsKeys;
 import com.google.gson.Gson;
 
-import org.json.JSONObject;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,12 +41,14 @@ import retrofit2.Response;
 public class AddBookActivity extends AppCompatActivity {
     private OperationService operationService;
     private BooksAPIService booksAPIService;
-    boolean booksApiRunning = true;
 
     private UserBoundary myUser;
     private LocationBoundary myLocation;
 
     private MySharedPreferences prefs;
+
+    private RecyclerView recyclerView;
+    private GoogleBooksAdapter googleBooksAdapter;
 
     private ImageView addBook_BTN_filter;
     private EditText add_EDT_title;
@@ -118,29 +119,6 @@ public class AddBookActivity extends AppCompatActivity {
                 Log.d("aaa", q);
                 // call api function.
                 booksAPIService.getBooksWithApi(q, "AIzaSyBZF6LHJsVR6sSmhXMQUKC7ZS0xlFqtkgQ");
-
-                Log.d("aaa", "after book-api call");
-//                OperationBoundary operationBoundary = new OperationBoundary();
-//                Map<String, Object> itemAttributes = new HashMap<String, Object>();
-//                Map<String, Object> operationsAttributes = new HashMap<String, Object>();
-
-//                operationBoundary.setType("createNewBook");
-//                itemAttributes.put("title", title);
-//                itemAttributes.put("author", author);
-//                itemAttributes.put("publisher", publisher);
-//                itemAttributes.put("subject", subject);
-//                itemAttributes.put("isbn", isbn);
-//                itemAttributes.put("lccn", lccn);
-//                itemAttributes.put("oclc", oclc);
-//                operationsAttributes.put("owner", myUser.getUsername());
-//                operationsAttributes.put("bookName", title);
-//                operationsAttributes.put("bookLocation", myLocation);
-//                operationsAttributes.put("bookAttributes", itemAttributes);
-//
-//                operationBoundary.setInvokedBy(new User(myUser.getUserId()));
-//                operationBoundary.setOperationAttributes(operationsAttributes);
-
-//                operationService.invokeOperation(operationBoundary);
             }
         });
 
@@ -166,6 +144,8 @@ public class AddBookActivity extends AppCompatActivity {
         add_EDT_lccn = findViewById(R.id.add_EDT_lccn);
         add_EDT_oclc = findViewById(R.id.add_EDT_oclc);
         add_BTN_submit = findViewById(R.id.add_BTN_submit);
+
+//        recyclerView = findViewById(R.id.search_RecyclerView);
     }
 
     private Callback<BooksResults> getBooksWithApiCallback = new Callback<BooksResults>() {
@@ -173,50 +153,33 @@ public class AddBookActivity extends AppCompatActivity {
         public void onResponse(Call<BooksResults> call, Response<BooksResults> response) {
             if (!response.isSuccessful()) {
                 Log.d("aaa", response.code() + ": " + response.message());
-                booksApiRunning = false;
                 return;
             }
 
-            Log.d("aaa", "success" + response.body().getItems().size());
-
             BooksResults booksResults = response.body();
+            final List<Result> results = booksResults.getItems();
+            Log.d("aaa", "success: " + results.size() + " books.");
+
 
             if (booksResults == null || booksResults.getTotalItems() < 1) {
                 Log.d("aaa", "book not found");
 //                throw new BookNotFoundException("Book not found");
             }
 
-            final List<Result> results = booksResults.getItems();
             if (results == null || results.size() < 1) {
                 Log.d("aaa", "invalid items list");
 //                throw new BookNotFoundException("Invalid items list");
             }
 
+            Log.d("aaa", results.get(0).getBook().getTitle());
+            Log.d("aaa", results.get(0).getBook().toString());
             // show results in recyclerView.
+            createBookResultsRecycler(results);
 
-            final Book book = results.get(0).getBook();
-
-
-            OperationBoundary operationBoundary = new OperationBoundary();
-            Map<String, Object> itemAttributes = new HashMap<>();
-            Map<String, Object> operationsAttributes = new HashMap<String, Object>();
-
-            operationBoundary.setType("createNewBook");
-            itemAttributes.put("googleBook", book);
-            operationsAttributes.put("owner", myUser.getUsername());
-            operationsAttributes.put("bookName", book.getTitle());
-            operationsAttributes.put("bookLocation", myLocation);
-            operationsAttributes.put("bookAttributes", itemAttributes);
-
-            operationBoundary.setInvokedBy(new User(myUser.getUserId()));
-            operationBoundary.setOperationAttributes(operationsAttributes);
-
-            operationService.invokeOperation(operationBoundary);
         }
 
         @Override
         public void onFailure(Call<BooksResults> call, Throwable t) {
-            booksApiRunning = false;
             Log.d("aaa", t.getMessage() + " (failed).");
         }
     };
@@ -250,5 +213,42 @@ public class AddBookActivity extends AppCompatActivity {
             Log.d("vvv", "FAILED " + t.getMessage());
         }
     };
+
+    private void createBookResultsRecycler(List<Result> results) {
+        recyclerView = findViewById(R.id.add_RCL_bookResultsRecycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        googleBooksAdapter = new GoogleBooksAdapter(this, results);
+        googleBooksAdapter.setClickListener(myBookResultsAdapterClickListener);
+        recyclerView.setAdapter(googleBooksAdapter);
+    }
+
+    private GoogleBooksAdapter.ItemClickListener myBookResultsAdapterClickListener = new GoogleBooksAdapter.ItemClickListener() {
+        @Override
+        public void onItemClick(View view, int position) {
+            Result bookResult = googleBooksAdapter.getItem(position);
+            Log.d("aaa", "book: " + bookResult.getBook().getTitle());
+
+            // TODO: ask add item popup.
+            OperationBoundary operationBoundary = new OperationBoundary();
+            Map<String, Object> itemAttributes = new HashMap<>();
+            Map<String, Object> operationsAttributes = new HashMap<String, Object>();
+
+            operationBoundary.setType("createNewBook");
+            itemAttributes.put("googleBook", bookResult.getBook());
+            operationsAttributes.put("owner", myUser.getUsername()); //TODO might need to change into UserIdBoundary in addition to username (for linking purposes).
+            operationsAttributes.put("bookName", bookResult.getBook().getTitle());
+            operationsAttributes.put("bookLocation", myLocation);
+            operationsAttributes.put("bookAttributes", itemAttributes);
+
+            operationBoundary.setInvokedBy(new User(myUser.getUserId()));
+            operationBoundary.setOperationAttributes(operationsAttributes);
+
+            operationService.invokeOperation(operationBoundary);
+        }
+    };
+
+    public void updateBookAdapter() {
+        googleBooksAdapter.notifyDataSetChanged();
+    }
 
 }

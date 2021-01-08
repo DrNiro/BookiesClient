@@ -61,7 +61,7 @@ public class BooksAPIService /*extends AsyncTask<Void, Void, Void>*/ {
             return;
         }
 
-        Call<BooksResults> call = this.booksAPIController.getBooks(q, key);
+        Call<BooksResults> call = this.booksAPIController.getBooks(q, Constants.BOOK_API_MAX_SIZE, key);
 
         call.enqueue(this.getBooksCallback);
 

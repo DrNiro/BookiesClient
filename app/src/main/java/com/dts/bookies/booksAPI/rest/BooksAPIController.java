@@ -19,6 +19,7 @@ public interface BooksAPIController {
 
     @GET("books/v1/volumes")
     public Call<BooksResults> getBooks(@Query("q") String q,
+                                       @Query("maxResults") String maxResults,
                                        @Query("key") String keyAPI);
 
 

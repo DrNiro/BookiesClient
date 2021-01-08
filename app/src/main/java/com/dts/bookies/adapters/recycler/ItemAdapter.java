@@ -1,4 +1,4 @@
-package com.dts.bookies.activities;
+package com.dts.bookies.adapters.recycler;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,11 +60,11 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            itemNameHolder = itemView.findViewById(R.id.list_item_TXT_itemBookName);
+            itemNameHolder = itemView.findViewById(R.id.list_item_TXT_bookTitle);
             ItemImageHolder = itemView.findViewById(R.id.list_item_IMG_imageBook);
-            itemAuthorHolder = itemView.findViewById(R.id.list_item_TXT_itemBookAuthor);
-            itemOwnerHolder = itemView.findViewById(R.id.list_item_TXT_owner);
-            itemGenreHolder = itemView.findViewById(R.id.list_item_TXT_genre);
+            itemAuthorHolder = itemView.findViewById(R.id.list_item_TXT_bookAuthor);
+            itemOwnerHolder = itemView.findViewById(R.id.list_item_TXT_langAndDate);
+            itemGenreHolder = itemView.findViewById(R.id.list_item_TXT_subject);
 
 
         }

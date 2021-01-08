@@ -48,6 +48,14 @@
             android:layout_alignTop="@+id/add_EDT_title"
             />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/add_RCL_bookResultsRecycler"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/add_EDT_title"
+            android:layout_marginTop="7dp"
+            />
+
         <RelativeLayout
             android:id="@+id/add_LAY_advOptions"
             android:layout_width="match_parent"
@@ -56,6 +64,7 @@
             android:layout_alignRight="@+id/add_EDT_title"
             android:layout_alignLeft="@+id/add_EDT_title"
             android:visibility="gone"
+            android:background="@color/white"
             android:layout_marginTop="7dp"
             >
 
