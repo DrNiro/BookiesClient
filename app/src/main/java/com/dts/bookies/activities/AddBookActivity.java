@@ -158,7 +158,6 @@ public class AddBookActivity extends AppCompatActivity {
 
             BooksResults booksResults = response.body();
             final List<Result> results = booksResults.getItems();
-            Log.d("aaa", "success: " + results.size() + " books.");
 
 
             if (booksResults == null || booksResults.getTotalItems() < 1) {
@@ -171,6 +170,7 @@ public class AddBookActivity extends AppCompatActivity {
 //                throw new BookNotFoundException("Invalid items list");
             }
 
+            Log.d("aaa", "success: " + results.size() + " books.");
             Log.d("aaa", results.get(0).getBook().getTitle());
             Log.d("aaa", results.get(0).getBook().toString());
             // show results in recyclerView.
