@@ -88,7 +88,8 @@ public class AddBookActivity extends AppCompatActivity {
             }
         });
 
-        myLocation = new Gson().fromJson(prefs.getString(PrefsKeys.LOCATION, ""), LocationBoundary.class);
+        myLocation = new Gson().fromJson(prefs.getString(PrefsKeys.LOCATION, ""),
+                LocationBoundary.class);
         add_BTN_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -5,14 +5,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="horizontal"
     app:cardCornerRadius="10dp"
-    app:cardElevation="4dp"
+    app:cardElevation="5dp"
     app:cardUseCompatPadding="true"
     >
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp">
+        android:padding="20dp">
 
         <ImageView
             android:id="@+id/list_item_IMG_imageBook"
@@ -33,15 +33,13 @@
 
             <TextView
                 android:id="@+id/list_item_TXT_bookTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:gravity="left"
                 android:text="Title"
-                android:maxLength="20"
                 android:ellipsize="end"
-                android:maxLines="1"
-                android:layout_margin="3dp"
-                android:textSize="14sp"/>
+                android:maxLines="2"
+                android:textSize="15sp"/>
 
             <TextView
                 android:id="@+id/list_item_TXT_bookAuthor"
@@ -49,43 +47,41 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Author"
-                android:maxLength="20"
-                android:ellipsize="end"
                 android:maxLines="1"
                 android:textSize="12sp"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="3dp"
-                android:layout_marginBottom="3dp"
-                android:layout_marginRight="3dp"
                 android:layout_below="@+id/list_item_TXT_bookTitle"
                 />
 
-            <TextView
-                android:id="@+id/list_item_TXT_langAndDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:maxLength="20"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textSize="12sp"
-                android:text="Owner"
-                android:layout_margin="3dp"
-                android:layout_below="@+id/list_item_TXT_bookAuthor"
-                />
 
             <TextView
-                android:id="@+id/list_item_TXT_subject"
+                android:id="@+id/list_item_TXT_genre"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:maxLength="20"
                 android:ellipsize="end"
                 android:maxLines="1"
                 android:textSize="12sp"
-                android:text="Subject"
-                android:layout_margin="3dp"
-                android:layout_below="@+id/list_item_TXT_langAndDate"
+                android:layout_below="@+id/list_item_TXT_bookAuthor"
+
+                />
+            <TextView
+                android:id="@+id/list_item_TXT_owner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:textSize="12sp"
+                android:layout_below="@+id/list_item_TXT_genre"
+
+                />
+            <TextView
+                android:id="@+id/list_item_TXT_Address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="2"
+                android:textSize="12sp"
+                android:layout_below="@+id/list_item_TXT_owner"
 
                 />
 

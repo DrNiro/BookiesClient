@@ -330,8 +330,11 @@ public class MainPageActivity extends FragmentActivity {
             }
 
             itemList = response.body();
+            Log.d("vvv1234", itemList.length + "");
             String itemListJson = new Gson().toJson(itemList);
             prefs.putString(PrefsKeys.ITEM_LIST, itemListJson);
+            Log.d("vvv1234", itemList.length + "");
+
 //            mapFragment.initialMap();
         }
 

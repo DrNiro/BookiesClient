@@ -80,7 +80,7 @@ public class SearchFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     searchProgressBar.setVisibility(View.VISIBLE);
-                    String search = searchItem.getText().toString();
+                    String search = searchItem.getText().toString().toLowerCase();
                //     Log.d("vvv",search);
                   //  Log.d("vvv124", myUser.getUserId().getSpace());
                     itemService.searchItemsByName(myUser.getUserId().getSpace(),

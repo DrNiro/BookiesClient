@@ -53,8 +53,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         findViews();
 
         prefs = new MySharedPreferences(view.getContext());
+        String itemListJson = prefs.getString(PrefsKeys.ITEM_LIST, "");
+        itemBoundaryList = new Gson().fromJson(itemListJson, ItemBoundary[].class);
+        Log.d("vvv1234", itemBoundaryList.length + "");
         myLocation = new Gson().fromJson
                 (prefs.getString(PrefsKeys.LOCATION, ""), LocationBoundary.class);
+        myLocation.getLat().toString();
+
 
         return view;
     }
@@ -73,6 +78,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void initialMap() {
         String itemListJson = prefs.getString(PrefsKeys.ITEM_LIST, "");
         itemBoundaryList = new Gson().fromJson(itemListJson, ItemBoundary[].class);
+        Log.d("vvv1234", itemBoundaryList.toString());
 
         // iterate over item list
         for (ItemBoundary item : itemBoundaryList) {
