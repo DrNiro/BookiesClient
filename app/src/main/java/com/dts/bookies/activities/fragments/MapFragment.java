@@ -74,9 +74,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
         prefs = new MySharedPreferences(view.getContext());
         myUser = Functions.getUserBoundaryFromPrefs(prefs);
-
         myLocation = new Gson().fromJson
                 (prefs.getString(PrefsKeys.LOCATION, ""), LocationBoundary.class);
+        myLocation.getLat().toString();
+
 
         operationService = new OperationService();
         operationService.initInvokeCallback(findNearbyBooksCallback);
@@ -98,6 +99,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void initialMap() {
         String itemListJson = prefs.getString(PrefsKeys.ITEM_LIST, "");
         itemBoundaryList = new Gson().fromJson(itemListJson, ItemBoundary[].class);
+        Log.d("vvv1234", itemBoundaryList.toString());
 
         // iterate over item list
         for (ItemBoundary item : itemBoundaryList) {

@@ -128,7 +128,6 @@ public class ItemService {
         }
         Log.d("vvv", "2. in itemService");
         Call<ItemBoundary[]> call = this.itemApi.searchItemsByNamePattern(userSpace,userEmail,namePattern);
-
         call.enqueue(this.searchItemByNamePatternCallBack);
 
     }
