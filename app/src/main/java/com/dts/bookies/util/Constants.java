@@ -3,9 +3,9 @@ package com.dts.bookies.util;
 import java.util.regex.Pattern;
 
 public class Constants {
-//	final public static String BASE_URL = "http://192.168.1.22:8081/"; // 10.0.2.2 is the computer's localhost, while 127.0.0.1 is the phone emulator localhost..
-//	final public static String BASE_URL = "http://192.168.1.183:8081/"; // 10.0.2.2 is the computer's localhost, while 127.0.0.1 is the phone emulator localhost..
-	final public static String BASE_URL = "http://77.126.13.137:8081/"; // Nir's ip address.
+//	final public static String BASE_URL = "http://192.168.1.22:8081/"; // Daniel's inner network ip.
+	final public static String BASE_URL = "http://192.168.1.183:8081/"; // Nir's inner network ip.
+//	final public static String BASE_URL = "http://77.126.13.137:8081/"; // Nir's ip address.
 
 	final public static String BASE_BOOKS_API_URL = "https://www.googleapis.com/";
 	final public static String BOOK_API_MAX_SIZE = "10";

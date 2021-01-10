@@ -276,6 +276,9 @@ public class MainPageActivity extends FragmentActivity {
                 Intent settingsActivityIntent = new Intent(getApplicationContext(), SettingsActivity.class);
                 startActivityForResult(settingsActivityIntent, 1);
 //                MainPageActivity.this.finish();
+            } else if(btn.getId() == R.id.library_TAB_myBooks) {
+                Intent myBooksActivityIntent = new Intent(getApplicationContext(), MyBooksActivity.class);
+                startActivityForResult(myBooksActivityIntent, 2);
             }
         }
     };

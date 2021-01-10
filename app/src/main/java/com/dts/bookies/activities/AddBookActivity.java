@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.dts.bookies.R;
 import com.dts.bookies.adapters.recycler.GoogleBooksAdapter;
+import com.dts.bookies.booksAPI.entities.Book;
 import com.dts.bookies.booksAPI.entities.BooksResults;
 import com.dts.bookies.booksAPI.entities.Result;
 import com.dts.bookies.booksAPI.rest.BooksAPIService;
@@ -30,9 +31,12 @@ import com.dts.bookies.util.MySharedPreferences;
 import com.dts.bookies.util.PrefsKeys;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -60,7 +64,7 @@ public class AddBookActivity extends AppCompatActivity {
     private EditText add_EDT_oclc;
     private Button add_BTN_submit;
     private RelativeLayout add_LAY_advOptions;
-
+    private RelativeLayout add_LAY_loadingItem;
 
 
     @Override
@@ -145,8 +149,7 @@ public class AddBookActivity extends AppCompatActivity {
         add_EDT_lccn = findViewById(R.id.add_EDT_lccn);
         add_EDT_oclc = findViewById(R.id.add_EDT_oclc);
         add_BTN_submit = findViewById(R.id.add_BTN_submit);
-
-//        recyclerView = findViewById(R.id.search_RecyclerView);
+        add_LAY_loadingItem = findViewById(R.id.add_LAY_loadingItem);
     }
 
     private Callback<BooksResults> getBooksWithApiCallback = new Callback<BooksResults>() {
@@ -198,9 +201,6 @@ public class AddBookActivity extends AppCompatActivity {
 
             Log.d("aaa", "item: " + newItem.toString());
 
-//            Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
-//            startActivity(mainPageActivityIntent);
-//            move to profile/main page.
             AddBookActivity.this.finish();
 
 //            pop-up account created successfully.
@@ -228,6 +228,9 @@ public class AddBookActivity extends AppCompatActivity {
             Log.d("aaa", "book: " + bookResult.getBook().getTitle());
 
             // TODO: ask add item popup.
+
+            add_LAY_loadingItem.setVisibility(View.VISIBLE);
+
             OperationBoundary operationBoundary = new OperationBoundary();
             Map<String, Object> itemAttributes = new HashMap<>();
             Map<String, Object> operationsAttributes = new HashMap<String, Object>();
@@ -242,9 +245,26 @@ public class AddBookActivity extends AppCompatActivity {
             operationBoundary.setInvokedBy(new User(myUser.getUserId()));
             operationBoundary.setOperationAttributes(operationsAttributes);
 
+            updateMyBooksPrefs(bookResult.getBook());
             operationService.invokeOperation(operationBoundary);
         }
     };
+
+    public void updateMyBooksPrefs(Book newBook) {
+        Log.d("ccc", "updating my books prefs");
+        String myBooksJson = prefs.getString(PrefsKeys.MY_BOOKS, "");
+        List<Book> myBooksList;
+        if(!myBooksJson.equals("")) {
+            Book[] books = new Gson().fromJson(myBooksJson, Book[].class);
+            myBooksList = Arrays.stream(books).collect(Collectors.toList());
+            myBooksList.add(newBook);
+        } else {
+            myBooksList = new ArrayList<>();
+            myBooksList.add(newBook);
+        }
+        myBooksJson = new Gson().toJson(myBooksList.toArray());
+        prefs.putString(PrefsKeys.MY_BOOKS, myBooksJson);
+    }
 
     public void updateBookAdapter() {
         googleBooksAdapter.notifyDataSetChanged();

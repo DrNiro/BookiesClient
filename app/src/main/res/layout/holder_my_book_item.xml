@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true"
+    >
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
+        android:padding="10dp">
+
+        <ImageView
+            android:id="@+id/myBooks_IMG_imageBook"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/ic_launcher_background" />
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/myBooks_IMG_imageBook"
+            android:layout_centerHorizontal="true"
+            >
+
+            <TextView
+                android:id="@+id/myBooks_TXT_bookTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Title"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="3dp"
+                android:textSize="14sp"
+                />
+
+            <TextView
+                android:id="@+id/myBooks_TXT_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Authors"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:layout_margin="3dp"
+                android:textSize="14sp"
+                android:layout_alignParentBottom="true"
+                android:layout_toRightOf="@+id/list_item_IMG_swapState"
+                />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+
+</androidx.cardview.widget.CardView>

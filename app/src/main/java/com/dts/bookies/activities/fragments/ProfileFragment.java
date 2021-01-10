@@ -61,6 +61,13 @@ public class ProfileFragment extends Fragment {
 
         initUserDetails();
 
+        library_TAB_myBooks.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buttonClickedCallback.buttonClicked(view);
+            }
+        });
+
         library_BTN_settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -90,5 +97,7 @@ public class ProfileFragment extends Fragment {
         library_TXT_username.setText(myUser.getUsername());
         library_TXT_avatar.setText(myUser.getAvatar());
     }
+
+
 
 }

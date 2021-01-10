@@ -8,6 +8,8 @@
     android:padding="10dp"
     tools:context=".activities.AddBookActivity">
 
+
+
     <TextView
         android:id="@+id/add_TXT_koteret"
         android:layout_width="wrap_content"
@@ -158,6 +160,23 @@
         android:textSize="18sp"
         android:layout_alignParentBottom="true"/>
 
+
+    <RelativeLayout
+        android:id="@+id/add_LAY_loadingItem"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white_loading"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:id="@+id/add_PRGB_loadingBook"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:padding="10dp"
+            />
+
+    </RelativeLayout>
 
 
 </RelativeLayout>
