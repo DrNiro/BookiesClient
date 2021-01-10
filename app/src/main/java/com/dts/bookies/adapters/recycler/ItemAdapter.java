@@ -18,6 +18,7 @@ import com.dts.bookies.R;
 import com.dts.bookies.booksAPI.entities.Book;
 import com.dts.bookies.booksAPI.entities.ImagesUri;
 import com.dts.bookies.logic.boundaries.ItemBoundary;
+import com.dts.bookies.logic.boundaries.subboundaries.UserIdBoundary;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -56,7 +57,8 @@ public class ItemAdapter extends RecyclerView.Adapter<ItemAdapter.ItemViewHolder
         String itemName = "Name: " + bookDetails.getTitle();
         String itemAuthor = "Author: " + bookDetails.getAuthors();
         String itemGenre = "Genre: " + bookDetails.getCategories();
-        String itemOwner = "Owner: " + (String) itemArr[position].getItemAttributes().get("owner");
+        String itemOwner = "Owner: " + ((UserIdBoundary) new Gson().fromJson(new Gson().toJsonTree
+                (itemArr[position].getItemAttributes().get("owner")).getAsJsonObject(), UserIdBoundary.class)).getEmail();
         convertToAddress(itemArr[position].getLocation().getLat(), itemArr[position].getLocation().getLng());
         String BookImage = bookDetails.getImageLinks().getThumbnail();
 
