@@ -33,17 +33,12 @@ public class SignUpActivity extends AppCompatActivity {
     private EditText signup_EDT_username;
     private EditText signup_EDT_avatar;
     private EditText signup_EDT_email;
-    private EditText signup_EDT_password;
-    private EditText signup_EDT_confirmPassword;
     private Button   signup_BTN_createAccount;
 
-//    private final int NUM_OF_EDIT_TEXTS = 5;
-//    private boolean[] validations = new boolean[NUM_OF_EDIT_TEXTS];
-    private boolean[] validations = {false, false, false, false, false};
+    private boolean[] validations = {false, false, false};
 
     private UserService userService;
     private UserBoundary newUser;
-    private UserCredentials userCredentials;
 
     private MySharedPreferences prefs;
 
@@ -64,7 +59,7 @@ public class SignUpActivity extends AppCompatActivity {
         signup_BTN_createAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!(validations[0] && validations[1] && validations[2] && validations[3] && validations[4])) {
+                if(!(validations[0] && validations[1] && validations[2])) {
                     Toast.makeText(SignUpActivity.this, "invalid fields", Toast.LENGTH_LONG);
                     return;
                 }
@@ -72,25 +67,18 @@ public class SignUpActivity extends AppCompatActivity {
                 String username = signup_EDT_username.getText().toString();
                 String avatar = signup_EDT_avatar.getText().toString();
                 String email = signup_EDT_email.getText().toString();
-                String password = signup_EDT_password.getText().toString();
-                String confirmPassword = signup_EDT_confirmPassword.getText().toString();
 
                 Log.d("vvv", "username: " + username);
                 Log.d("vvv", "avatar: " + avatar);
                 Log.d("vvv", "email: " + email);
-                Log.d("vvv", "password: " + password);
 
                 userService.createNewUser(email, "PLAYER", username, avatar);
-
-//                Log.d("vvv", "new user: " + newUser.toString());
 
                 Log.d("vvv", "-----TESTING----- checking userCreatedFlag");
 //                check if user created successfully, else don't save credentials and don't move to the next page.
                 if(!userCreatedFlag)
                     return;
 
-                userCredentials = new UserCredentials(email, password);
-                Log.d("vvv", "hash password: " + userCredentials.getHashedPassword());
             }
         });
 
@@ -113,9 +101,9 @@ public class SignUpActivity extends AppCompatActivity {
             public void validate(EditText editText, String text) {
                 if(this.isEmpty()) {
                     signup_EDT_avatar.setError("must have an avatar (character sequence)");
-                    validations[4] = false;
+                    validations[1] = false;
                 } else {
-                    validations[4] = true;
+                    validations[1] = true;
                 }
             }
         });
@@ -125,36 +113,6 @@ public class SignUpActivity extends AppCompatActivity {
             public void validate(EditText editText, String text) {
                 if(!Functions.isValidEmail(text)) {
                     signup_EDT_email.setError("invalid email");
-                    validations[3] = false;
-                } else {
-                    validations[3] = true;
-                }
-            }
-        });
-
-        signup_EDT_password.addTextChangedListener(new TextValidator(signup_EDT_password) {
-            @Override
-            public void validate(EditText editText, String text) {
-                if(text.length() < 6) {
-                    signup_EDT_password.setError("at least 6 characters");
-                    validations[1] = false;
-                } else if(!(text.matches(Constants.VALID_PASSWORD_REGEX.pattern()))) {
-                    signup_EDT_password.setError("password must contains numbers and letters");
-                    validations[1] = false;
-                } else {
-                    validations[1] = true;
-                }
-            }
-        });
-
-        signup_EDT_confirmPassword.addTextChangedListener(new TextValidator(signup_EDT_confirmPassword) {
-            @Override
-            public void validate(EditText editText, String text) {
-                if(signup_EDT_password.getError() != null) {
-                    signup_EDT_confirmPassword.setError("insert valid password above");
-                    validations[2] = false;
-                } else if(!text.equals(signup_EDT_password.getText().toString())) {
-                    signup_EDT_confirmPassword.setError("");
                     validations[2] = false;
                 } else {
                     validations[2] = true;
@@ -168,8 +126,6 @@ public class SignUpActivity extends AppCompatActivity {
         signup_EDT_username = findViewById(R.id.signup_EDT_username);
         signup_EDT_avatar = findViewById(R.id.signup_EDT_avatar);
         signup_EDT_email = findViewById(R.id.signup_EDT_email);
-        signup_EDT_password = findViewById(R.id.signup_EDT_password);
-        signup_EDT_confirmPassword = findViewById(R.id.signup_EDT_confirmPassword);
         signup_BTN_createAccount = findViewById(R.id.signup_BTN_createAccount);
     }
 
@@ -192,19 +148,8 @@ public class SignUpActivity extends AppCompatActivity {
 //            save user details in local memory as json.
             String newUserJson = new Gson().toJson(newUser);
             Functions.saveUserToPrefs(newUserJson, prefs, 1);
-//            prefs.putString(PrefsKeys.USER_BOUNDARY, newUserJson);
-
 
             Log.d("vvv", "new user: " + newUser.toString());
-
-//            save user credentials in local memory as json.
-//            String userCredentialsJson = new Gson().toJson(userCredentials);
-//            prefs.putString(PrefsKeys.USER_CREDENTIALS, userCredentialsJson);
-
-//            Log.d("vvv", "credentials: " + userCredentialsJson);
-
-//            Log.d("vvv", "-----TESTING----- setting userCreatedFlag = true");
-//            userCreatedFlag = true;
 
 //            move to profile/main page.
             Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
@@ -221,7 +166,6 @@ public class SignUpActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -229,72 +173,5 @@ public class SignUpActivity extends AppCompatActivity {
         startActivity(startingActivityIntent);
         SignUpActivity.this.finish();
     }
-
-//    private TextValidator usernameValidator = new TextValidator(signup_EDT_username) {
-//        @Override
-//        public void validate(EditText editText, String text) {
-//            Log.d("vvv", "In TextValidator");
-//            if(this.isEmpty()) {
-//                signup_EDT_username.setError("must have username");
-//                validations[0] = false;
-//            } else {
-//                validations[0] = true;
-//            }
-//        }
-//    };
-//
-//    private TextValidator passwordValidator = new TextValidator(signup_EDT_password) {
-//        @Override
-//        public void validate(EditText editText, String text) {
-//            if(text.length() < 6) {
-//                signup_EDT_password.setError("at least 6 characters");
-//                validations[1] = false;
-//            } else if(!(text.matches("[a-zA-Z]+") && text.matches("[0-9]+"))) {
-//                signup_EDT_password.setError("password must contains numbers and letters");
-//                validations[1] = false;
-//            } else {
-//                validations[1] = true;
-//            }
-//        }
-//    };
-//
-//    private TextValidator confirmPasswordValidator = new TextValidator(signup_EDT_confirmPassword) {
-//        @Override
-//        public void validate(EditText editText, String text) {
-//            if(signup_EDT_password.getError() != null) {
-//                signup_EDT_confirmPassword.setError("insert valid password above");
-//                validations[2] = false;
-//            } else if(!text.equals(signup_EDT_password.getText().toString())) {
-//                signup_EDT_confirmPassword.setError("");
-//                validations[2] = false;
-//            } else {
-//                validations[2] = true;
-//            }
-//        }
-//    };
-//
-//    private TextValidator emailValidator = new TextValidator(signup_EDT_email) {
-//        @Override
-//        public void validate(EditText editText, String text) {
-//            if(!Functions.isValidEmail(text)) {
-//                signup_EDT_email.setError("invalid email");
-//                validations[3] = false;
-//            } else {
-//                validations[3] = true;
-//            }
-//        }
-//    };
-//
-//    private TextValidator avatarValidator = new TextValidator(signup_EDT_avatar) {
-//        @Override
-//        public void validate(EditText editText, String text) {
-//            if(this.isEmpty()) {
-//                signup_EDT_avatar.setError("must have an avatar (character sequence)");
-//                validations[4] = false;
-//            } else {
-//                validations[4] = true;
-//            }
-//        }
-//    };
 
 }

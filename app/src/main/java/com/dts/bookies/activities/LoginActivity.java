@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.dts.bookies.R;
 import com.dts.bookies.StartingActivity;
@@ -35,10 +36,9 @@ public class LoginActivity extends AccountAuthenticatorActivity {
 
     private Button login_BTN_signIn;
     private EditText login_EDT_email;
-    private EditText login_EDT_password;
+    private TextView login_TXT_signUp;
 
     private boolean validEmail;
-    private boolean validPassword;
 
     private UserBoundary myUser;
 
@@ -48,8 +48,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-
 
         findViews();
         validEmail = false;
@@ -68,7 +66,6 @@ public class LoginActivity extends AccountAuthenticatorActivity {
             @Override
             public void onClick(View view) {
                 String email = login_EDT_email.getText().toString().trim();
-                String password = login_EDT_password.getText().toString().trim();
 
                 if (!Functions.isValidEmail(email)) {
                     login_EDT_email.setError("invalid email");
@@ -76,23 +73,27 @@ public class LoginActivity extends AccountAuthenticatorActivity {
                 } else {
                     validEmail = true;
                 }
-//                String credentialsJson = prefs.getString(PrefsKeys.USER_CREDENTIALS, null);
-//                if(credentialsJson == null) {
-//
-//                }
                 userService.loginUser(Constants.SPACE_NAME, email);
+            }
+        });
+
+        login_TXT_signUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent signUpActivityIntent = new Intent(getApplicationContext(), SignUpActivity.class);
+                startActivity(signUpActivityIntent);
+                LoginActivity.this.finish();
             }
         });
 
     }
 
     private void findViews() {
-        this.login_BTN_signIn = findViewById(R.id.login_BTN_login);
-        this.login_EDT_email = findViewById(R.id.login_EDT_email);
-        this.login_EDT_password = findViewById(R.id.login_EDT_password);
+        login_BTN_signIn = findViewById(R.id.login_BTN_login);
+        login_EDT_email = findViewById(R.id.login_EDT_email);
+        login_TXT_signUp = findViewById(R.id.login_TXT_signUp);
     }
 
-//    TODO: check if password mechanism is needed.
     private Callback<UserBoundary> loginUserCallback = new Callback<UserBoundary>() {
         @Override
         public void onResponse(Call<UserBoundary> call, Response<UserBoundary> response) {

@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.fragments.ProfileFragment"
+    android:padding="10dp">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/library_LAY_topBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp">
+
+                <TextView
+                    android:id="@+id/library_TXT_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Library"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="20dp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    />
+
+                <ImageView
+                    android:id="@+id/library_BTN_settings"
+                    android:layout_width="21dp"
+                    android:layout_height="21dp"
+                    android:background="@drawable/ic_settings"
+                    />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/library_LAY_helloUser"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/library_LAY_topBar">
+
+                <TextView
+                    android:id="@+id/library_TXT_hello"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:text="hello " />
+
+                <TextView
+                    android:id="@+id/library_TXT_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="username"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_toRightOf="@+id/library_TXT_hello"
+                    />
+
+                <TextView
+                    android:id="@+id/library_TXT_avatarComma"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=", "
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_toRightOf="@+id/library_TXT_username"
+                    />
+
+                <TextView
+                    android:id="@+id/library_TXT_avatar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="avatar"
+                    android:textColor="@color/black"
+                    android:textSize="14sp"
+                    android:layout_toRightOf="@+id/library_TXT_avatarComma"/>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/library_LAY_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/library_LAY_helloUser"
+                android:layout_marginTop="3dp">
+
+                <TextView
+                    android:id="@+id/library_TAB_myBooks"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="My books"
+                    android:drawableLeft="@drawable/ic_menu_book"
+                    android:padding="15dp"
+                    android:drawablePadding="20dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:background="@drawable/divider"
+                    android:layout_below="@+id/library_TAB_myBooks"/>
+
+                <TextView
+                    android:id="@+id/library_TAB_lookingFor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Looking for"
+                    android:drawableLeft="@drawable/ic_baseline_search_library"
+                    android:padding="15dp"
+                    android:drawablePadding="20dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_below="@+id/library_TAB_myBooks"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.1dp"
+                    android:background="@drawable/divider"
+                    android:layout_below="@+id/library_TAB_lookingFor"/>
+
+                <TextView
+                    android:id="@+id/library_TAB_favourites"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Favourites"
+                    android:drawableLeft="@drawable/ic_baseline_book_favourite"
+                    android:padding="15dp"
+                    android:drawablePadding="20dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:layout_below="@+id/library_TAB_lookingFor"
+                    />
+
+                <TextView
+                    android:id="@+id/library_TAB_recentSwaps"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Recent swaps"
+                    android:padding="15dp"
+                    android:drawablePadding="20dp"
+                    android:textSize="16sp"
+                    android:textColor="@color/black"
+                    android:textStyle="bold"
+                    android:layout_below="@+id/library_TAB_favourites"
+                    />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/library_RCL_recentBookSwapsRecycler"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/library_TAB_recentSwaps" />
+
+            </RelativeLayout>
+
+
+            <Button
+                android:id="@+id/profile_BTN_logout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="logout"
+                android:visibility="gone"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="5dp"
+                />
+
+        </RelativeLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

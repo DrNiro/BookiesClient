@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="512.005dp"
+    android:height="512.005dp"
+    android:viewportWidth="512.005"
+    android:viewportHeight="512.005">
+
+    <path
+        android:fillColor="#FF6200EE"
+        android:pathData="M505.749,475.587 L360.149,329.987 C388.352,295.15,405.333,250.883,405.333,202.67 C405.333,90.926,314.41,0.003,202.666,0.003 S0,90.925,0,202.669 S90.923,405.336,202.667,405.336 C250.88,405.336,295.147,388.355,329.984,360.152 L475.584,505.752 C479.744,509.912,485.205,512.003,490.667,512.003 S501.59,509.912,505.75,505.752 C514.091,497.411,514.091,483.928,505.749,475.587 Z M202.667,362.669 C114.432,362.669,42.667,290.904,42.667,202.669 S114.432,42.669,202.667,42.669 S362.667,114.434,362.667,202.669 S290.901,362.669,202.667,362.669 Z" />
+</vector>
+
+<!--<div>Icons made by <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>-->

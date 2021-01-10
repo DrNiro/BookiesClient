@@ -1,7 +1,6 @@
 package com.dts.bookies.activities;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -10,8 +9,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Looper;
 import android.util.Log;
@@ -19,9 +20,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.dts.bookies.MapsActivity;
 import com.dts.bookies.R;
 import com.dts.bookies.StartingActivity;
+import com.dts.bookies.activities.fragments.ChatFragment;
 import com.dts.bookies.activities.fragments.MapFragment;
 import com.dts.bookies.activities.fragments.ProfileFragment;
 import com.dts.bookies.activities.fragments.SearchFragment;
@@ -53,18 +54,20 @@ public class MainPageActivity extends FragmentActivity {
     private ProfileFragment profileFragment;
     private MapFragment mapFragment;
     private SearchFragment searchFragment;
+    private ChatFragment chatFragment;
     private LocationBoundary locationBoundary;
+    private LocationBoundary myLocation;
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
-
-//    TODO: add book option in toolbar leads to a new activity which you create there, not another fragment.
 
     private ImageView main_BTN_profile;
     private ImageView main_BTN_map;
-    private ImageView main_BTN_search;
     private ImageView main_BTN_addBook;
+    private ImageView main_BTN_search;
+    private ImageView main_BTN_chat;
 
     private Map<String, ImageView> imageButtonsMap;
     private Map<String, Fragment> fragmentsMap;
+    private Map<String, Integer> drawablesMap;
 
     private FragmentsMementoManager mementoManager;
     private MySharedPreferences prefs;
@@ -78,7 +81,6 @@ public class MainPageActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_page);
 
-
         findViews();
         initFragmentsAndMemento();
         initMaps();
@@ -88,10 +90,7 @@ public class MainPageActivity extends FragmentActivity {
         locationBoundary = new LocationBoundary();
         prefs = new MySharedPreferences(this);
         itemService = new ItemService();
-        itemService.initGetAllItemsCallback(getAllItemsCallBack);
-        getUserFromPrefs();
-
-        itemService.getAllBookItems(myUser.getUserId().getSpace(),myUser.getUserId().getEmail());
+        myUser = Functions.getUserBoundaryFromPrefs(prefs);
 
         main_BTN_profile.setOnClickListener(profileClickListener);
 
@@ -99,10 +98,11 @@ public class MainPageActivity extends FragmentActivity {
 
         main_BTN_addBook.setOnClickListener(addBookClickListener);
 
-        main_BTN_search.setOnClickListener(searchClickListener);
-
         main_BTN_addBook.setOnClickListener(addClickListener);
 
+        main_BTN_search.setOnClickListener(searchClickListener);
+
+        main_BTN_chat.setOnClickListener(chatClickListener);
     }
 
     private void findViews() {
@@ -110,15 +110,15 @@ public class MainPageActivity extends FragmentActivity {
         main_BTN_map = findViewById(R.id.main_BTN_map);
         main_BTN_addBook = findViewById(R.id.main_BTN_addBook);
         main_BTN_search = findViewById(R.id.main_BTN_search);
-        main_BTN_addBook = findViewById(R.id.main_BTN_addBook);
+        main_BTN_chat = findViewById(R.id.main_BTN_chat);
     }
-
 
     private void initFragmentsAndMemento() {
         profileFragment = new ProfileFragment();
         profileFragment.setCallback(buttonClickedCallback);
         mapFragment = new MapFragment();
         searchFragment = new SearchFragment();
+        chatFragment = new ChatFragment();
 
         mementoManager = new FragmentsMementoManager();
     }
@@ -128,11 +128,23 @@ public class MainPageActivity extends FragmentActivity {
         imageButtonsMap.put(profileFragment.getClass().getSimpleName(), main_BTN_profile);
         imageButtonsMap.put(mapFragment.getClass().getSimpleName(), main_BTN_map);
         imageButtonsMap.put(searchFragment.getClass().getSimpleName(), main_BTN_search);
+        imageButtonsMap.put(chatFragment.getClass().getSimpleName(), main_BTN_chat);
+
+        drawablesMap = new HashMap<>();
+        drawablesMap.put(profileFragment.getClass().getSimpleName() + "unf", R.drawable.toolbar_img_library_unfocused);
+        drawablesMap.put(profileFragment.getClass().getSimpleName() + "f", R.drawable.toolbar_img_library_focused);
+        drawablesMap.put(mapFragment.getClass().getSimpleName() + "unf", R.drawable.toolbar_img_map_unfocused);
+        drawablesMap.put(mapFragment.getClass().getSimpleName() + "f", R.drawable.toolbar_img_map_focused);
+        drawablesMap.put(searchFragment.getClass().getSimpleName() + "unf", R.drawable.toolbar_img_search_unfocused);
+        drawablesMap.put(searchFragment.getClass().getSimpleName() + "f", R.drawable.toolbar_img_search_focused);
+        drawablesMap.put(chatFragment.getClass().getSimpleName() + "unf", R.drawable.toolbar_img_chat_unfocused);
+        drawablesMap.put(chatFragment.getClass().getSimpleName() + "f", R.drawable.toolbar_img_chat_focused);
 
         fragmentsMap = new HashMap<>();
         fragmentsMap.put(MementoStates.PROFILE_STATE, profileFragment);
         fragmentsMap.put(MementoStates.MAP_STATE, mapFragment);
         fragmentsMap.put(MementoStates.SEARCH_STATE, searchFragment);
+        fragmentsMap.put(MementoStates.CHAT_STATE, chatFragment);
 
     }
 
@@ -141,14 +153,16 @@ public class MainPageActivity extends FragmentActivity {
         transaction.add(R.id.main_LAY_mainWindow, profileFragment);
         transaction.add(R.id.main_LAY_mainWindow, mapFragment);
         transaction.add(R.id.main_LAY_mainWindow, searchFragment);
+        transaction.add(R.id.main_LAY_mainWindow, chatFragment);
         transaction.hide(profileFragment);
         transaction.hide(mapFragment);
         transaction.hide(searchFragment);
+        transaction.hide(chatFragment);
         transaction.show(firstFocusFrag);
         transaction.commit();
 
         mementoManager.setCurrentFragment(firstFocusFrag);
-        markToolbarImageByFragment(firstFocusFrag);
+        changeToolbarFocusByFragment(firstFocusFrag, true);
     }
 
     private void switchFragmentFocus(Fragment offFocusFrag, Fragment newFocusFrag) {
@@ -168,17 +182,20 @@ public class MainPageActivity extends FragmentActivity {
 
     private void switchToolbarFocus(Fragment offFocusFrag, Fragment newFocusFrag) {
         if(offFocusFrag != null) {
-            unmarkToolbarImageByFragment(offFocusFrag);
+            changeToolbarFocusByFragment(offFocusFrag, false);
         }
-        markToolbarImageByFragment(newFocusFrag);
+        changeToolbarFocusByFragment(newFocusFrag, true);
     }
 
-    private void markToolbarImageByFragment(Fragment fragment) {
-        imageButtonsMap.get(fragment.getClass().getSimpleName()).setBackgroundResource(R.color.gray);
-    }
+    private void changeToolbarFocusByFragment(Fragment fragment, boolean isFocused) {
+        if(isFocused) {
+            imageButtonsMap.get(fragment.getClass().getSimpleName())
+                    .setImageResource(drawablesMap.get(fragment.getClass().getSimpleName()+"f"));
 
-    private void unmarkToolbarImageByFragment(Fragment fragment) {
-        imageButtonsMap.get(fragment.getClass().getSimpleName()).setBackgroundResource(R.color.design_default_color_background);
+        } else {
+            imageButtonsMap.get(fragment.getClass().getSimpleName())
+                    .setImageResource(drawablesMap.get(fragment.getClass().getSimpleName()+"unf"));
+        }
     }
 
     private void nextFragClick(Fragment currentFragment, Fragment nextFragment) {
@@ -232,6 +249,14 @@ public class MainPageActivity extends FragmentActivity {
             nextFragClick(mementoManager.getCurrentFragment(), searchFragment);
         }
     };
+
+    private View.OnClickListener chatClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            nextFragClick(mementoManager.getCurrentFragment(), chatFragment);
+        }
+    };
+
     private View.OnClickListener addClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -247,9 +272,26 @@ public class MainPageActivity extends FragmentActivity {
                 Intent startingActivityIntent = new Intent(getApplicationContext(), StartingActivity.class);
                 startActivity(startingActivityIntent);
                 MainPageActivity.this.finish();
+            } else if(btn.getId() == R.id.library_BTN_settings) {
+                Intent settingsActivityIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivityForResult(settingsActivityIntent, 1);
+//                MainPageActivity.this.finish();
             }
         }
     };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1) {
+            if(resultCode == Activity.RESULT_OK && data != null && data.hasExtra("updateProfile")) { // if got result and has update profile - update profile and continute
+                profileFragment.updateUserDetails();
+            } else if(resultCode == Activity.RESULT_OK && data == null) { // else if got result but no update - logout pressed (finish).
+                MainPageActivity.this.finish();
+            }
+        }
+    }
+
     public void permissionsForLocation() {
         if (ContextCompat.checkSelfPermission(
                 getApplicationContext(), Manifest.permission.ACCESS_FINE_LOCATION
@@ -282,7 +324,6 @@ public class MainPageActivity extends FragmentActivity {
         locationRequest.setFastestInterval(3000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
-
         LocationServices.getFusedLocationProviderClient(MainPageActivity.this)
                 .requestLocationUpdates(locationRequest, new LocationCallback() {
                     @SuppressLint("MissingPermission")
@@ -295,51 +336,27 @@ public class MainPageActivity extends FragmentActivity {
                             int latestLocationIndex = locationResult.getLocations().size() - 1;
                             double latitude = locationResult.getLocations().get(latestLocationIndex).getLatitude();
                             double longitude = locationResult.getLocations().get(latestLocationIndex).getLongitude();
-                           // Log.d("vvvvv", "latitude: " + latitude);
-                          //  Log.d("vvvvv", "latitude: " + longitude);
                             locationBoundary.setLat(latitude);
                             locationBoundary.setLng(longitude);
                             String locationJson = new Gson().toJson(locationBoundary);
                             prefs.putString(PrefsKeys.LOCATION, locationJson);
-                            Log.d("vvvvv", "locationBoundary1: " +
+                            Log.d("vvv", "locationBoundary1: " +
                                     prefs.getString("Location", ""));
-                            Log.d("vvvvv", "locationBoundary2: " + locationBoundary);
-
+                            Log.d("vvv", "locationBoundary2: " + locationBoundary);
                         }
                     }
                 }, Looper.myLooper());
     }
 
-    private void getUserFromPrefs() {
-        String userJson = prefs.getString(PrefsKeys.USER_BOUNDARY, "");
-        if (!userJson.equals("")) {
-            myUser = new Gson().fromJson(userJson, UserBoundary.class);
-        } else {
-            Log.d("vvv", "user not found in preferences");
+    @Override
+    protected void onResume() {
+        super.onResume();
+        String locationJson = prefs.getString(PrefsKeys.LOCATION, "");
+        if(!locationJson.equals("")) {
+            myLocation = new Gson().fromJson(locationJson, LocationBoundary.class);
+            mapFragment.showAllNearbyBooks(20.0, myLocation);
         }
     }
-    private Callback<ItemBoundary[]> getAllItemsCallBack = new Callback<ItemBoundary[]>() {
-        @Override
-        public void onResponse(Call<ItemBoundary[]> call, Response<ItemBoundary[]> response) {
-            if(!response.isSuccessful()) {
-                if(response.code() == 404) {
-                    Log.d("vvv", "404: user not found");
-                }
-                Log.d("vvv", response.code() + ": " + response.message());
-                return;
-            }
-
-            itemList = response.body();
-            String itemListJson = new Gson().toJson(itemList);
-            prefs.putString(PrefsKeys.ITEM_LIST, itemListJson);
-//            mapFragment.initialMap();
-        }
-
-        @Override
-        public void onFailure(Call<ItemBoundary[]> call, Throwable t) {
-            Log.d("vvv", "failure login, message: " + t.getMessage());
-        }
-    };
 
 }
 

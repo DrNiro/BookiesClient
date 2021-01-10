@@ -71,37 +71,12 @@
             android:layout_marginTop="10dp"
             android:inputType="textEmailAddress" />
 
-        <EditText
-            android:id="@+id/signup_EDT_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="13dp"
-            android:layout_marginLeft="13dp"
-            android:textSize="17sp"
-            android:inputType="textPassword"
-            android:hint="* Password - at lease 6 characters"
-            android:layout_below="@+id/signup_EDT_email"
-            android:layout_marginTop="10dp"
-            />
-
-        <EditText
-            android:id="@+id/signup_EDT_confirmPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="13dp"
-            android:layout_marginLeft="13dp"
-            android:textSize="17sp"
-            android:hint="* Confirm password"
-            android:layout_below="@+id/signup_EDT_password"
-            android:layout_marginTop="10dp"
-            android:inputType="textPassword" />
-
         <Button
             android:id="@+id/signup_BTN_createAccount"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:text="Create account"
-            android:layout_below="@+id/signup_EDT_confirmPassword"
+            android:layout_below="@+id/signup_EDT_email"
             android:layout_marginTop="70dp"
             android:layout_centerHorizontal="true"
             android:textColor="@color/white"

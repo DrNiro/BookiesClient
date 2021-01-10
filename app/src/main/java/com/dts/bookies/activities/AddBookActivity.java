@@ -62,6 +62,7 @@ public class AddBookActivity extends AppCompatActivity {
     private RelativeLayout add_LAY_advOptions;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -197,9 +198,9 @@ public class AddBookActivity extends AppCompatActivity {
 
             Log.d("aaa", "item: " + newItem.toString());
 
+//            Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
+//            startActivity(mainPageActivityIntent);
 //            move to profile/main page.
-            Intent mainPageActivityIntent = new Intent(getApplicationContext(), MainPageActivity.class);
-            startActivity(mainPageActivityIntent);
             AddBookActivity.this.finish();
 
 //            pop-up account created successfully.
@@ -233,7 +234,7 @@ public class AddBookActivity extends AppCompatActivity {
 
             operationBoundary.setType("createNewBook");
             itemAttributes.put("googleBook", bookResult.getBook());
-            operationsAttributes.put("owner", myUser.getUsername()); //TODO might need to change into UserIdBoundary in addition to username (for linking purposes).
+            operationsAttributes.put("owner", myUser.getUsername()); //TODO might need to change into UserBoundary in addition to username (for linking purposes).
             operationsAttributes.put("bookName", bookResult.getBook().getTitle());
             operationsAttributes.put("bookLocation", myLocation);
             operationsAttributes.put("bookAttributes", itemAttributes);

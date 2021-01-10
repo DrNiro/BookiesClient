@@ -41,6 +41,11 @@ public class Functions {
         }
     }
 
+    public static Object getResponseToClassWithGson(Object response, Class<?> type) {
+        return new Gson().fromJson(new Gson().toJsonTree(response).getAsJsonObject(), type);
+
+    }
+
 
     public static void printMementoList(List<Memento> memList) {
         if(memList.size() == 0) {

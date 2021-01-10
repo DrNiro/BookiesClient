@@ -14,16 +14,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.dts.bookies.R;
 import com.dts.bookies.booksAPI.entities.Book;
-import com.dts.bookies.booksAPI.entities.Result;
 
 import java.util.List;
 
-public class GoogleBooksAdapter extends RecyclerView.Adapter<GoogleBooksAdapter.ViewHolder> {
-    private List<Result> mData;
+public class RecentSwapsAdapter extends RecyclerView.Adapter<RecentSwapsAdapter.ViewHolder> {
+    private List<Book> mData;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
-    public GoogleBooksAdapter(Context context, List<Result> books){
+    public RecentSwapsAdapter(Context context, List<Book> books){
         this.mInflater = LayoutInflater.from(context);
         mData = books;
     }
@@ -31,55 +30,36 @@ public class GoogleBooksAdapter extends RecyclerView.Adapter<GoogleBooksAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.holder_add_book_item, parent,false);
+        View view = mInflater.inflate(R.layout.holder_swap_item, parent,false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Book book = mData.get(position).getBook();
+        Book book = mData.get(position);
 //        Log.d("aaa", "from adapter: " + book.toString()); // for debugging use...
-
-        StringBuilder authors = new StringBuilder("");
-        if(book.getAuthors() != null) {
-            if(!book.getAuthors().get(0).equals("."))
-                for (String author : book.getAuthors()) authors.append(author + ", ");
-            else
-                authors.append("No known authors.  ");
-        } else {
-            authors.append("No known authors.  ");
-        }
-        String itemName = "" + book.getTitle();
-        String itemAuthor = "Authors: " + authors.substring(0, authors.length()-2);
-        StringBuilder categories = new StringBuilder("");
-        if(book.getCategories() != null)
-            for (String category : book.getCategories()) categories.append(category + ", ");
-        else
-            categories.append("None  ");
-        String itemGenre = "Genre: " + categories.substring(0, categories.length()-2);
-        String itemLangAndDate = book.getLanguage() + ", " + book.getPublishedDate();
 
         if(book.getImageLinks() == null) {
             Glide.with(mInflater.getContext())
                     .load(R.drawable.ic_launcher_background)
                     .centerCrop()
-                    .into(holder.ItemImageHolder);
+                    .into(holder.itemImageHolder);
         } else if(book.getImageLinks().getThumbnail() == null || book.getImageLinks().getThumbnail().equals("")) {
             Glide.with(mInflater.getContext())
                     .load(R.drawable.ic_launcher_background)
                     .centerCrop()
-                    .into(holder.ItemImageHolder);
+                    .into(holder.itemImageHolder);
         } else {
             Glide.with(mInflater.getContext())
                     .load(book.getImageLinks().getThumbnail())
                     .centerCrop()
-                    .into(holder.ItemImageHolder);
+                    .into(holder.itemImageHolder);
         }
 
+        String itemName = "" + book.getTitle();
+        // TODO: if(swap.getSwapStatus == "recieved") set image background to blue; else set to green;
+
         holder.itemNameHolder.setText(itemName);
-        holder.itemAuthorHolder.setText(itemAuthor);
-        holder.itemGenreHolder.setText(itemGenre);
-        holder.itemLangAndDateHolder.setText(itemLangAndDate);
     }
 
     @Override
@@ -88,20 +68,16 @@ public class GoogleBooksAdapter extends RecyclerView.Adapter<GoogleBooksAdapter.
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView ItemImageHolder;
+        ImageView itemImageHolder;
         TextView itemNameHolder;
-        TextView itemAuthorHolder;
-        TextView itemLangAndDateHolder;
-        TextView itemGenreHolder;
+        ImageView itemSwapStateHolder;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             itemNameHolder = itemView.findViewById(R.id.list_item_TXT_bookTitle);
-            ItemImageHolder = itemView.findViewById(R.id.list_item_IMG_imageBook);
-            itemAuthorHolder = itemView.findViewById(R.id.list_item_TXT_bookAuthor);
-            itemLangAndDateHolder = itemView.findViewById(R.id.list_item_TXT_langAndDate);
-            itemGenreHolder = itemView.findViewById(R.id.list_item_TXT_subject);
+            itemImageHolder = itemView.findViewById(R.id.list_item_IMG_imageBook);
+            itemSwapStateHolder = itemView.findViewById(R.id.list_item_IMG_swapState);
 
             itemView.setOnClickListener(this);
         }
@@ -112,7 +88,7 @@ public class GoogleBooksAdapter extends RecyclerView.Adapter<GoogleBooksAdapter.
         }
     }
 
-    public Result getItem(int id) {
+    public Book getItem(int id) {
         return mData.get(id);
     }
 

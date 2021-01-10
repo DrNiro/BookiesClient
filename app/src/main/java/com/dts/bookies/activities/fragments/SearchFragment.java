@@ -58,39 +58,38 @@ public class SearchFragment extends Fragment {
         if(view == null) {
             //this inflates the search fragment to the view group
             view = inflater.inflate(R.layout.fragment_search, container, false);
-            findViews();
-            prefs = new MySharedPreferences(view.getContext());
-
-        //    myUser = new UserBoundary();
-            itemService = new ItemService();
-            getUserFromPrefs();
-            String itemListJson = prefs.getString(PrefsKeys.ITEM_LIST, "");
-            itemBoundaryList = new Gson().fromJson(itemListJson, ItemBoundary[].class);
-            layoutManager = new LinearLayoutManager(getContext());
-            recyclerView.setLayoutManager(layoutManager);
-
-            //loads the itemlist to the recyclerView
-            //adapter = new ItemAdapter(itemBoundaryList);
-            //recyclerView.setAdapter(adapter);
-
-            Log.d("vvv122", myUser.getUserId().getSpace());
-            itemService.initSearchItemsByNameCallBack(searchBookItemByNameCallBack);
-            Log.d("vvv123", myUser.getUserId().getSpace());
-            searchButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    searchProgressBar.setVisibility(View.VISIBLE);
-                    String search = searchItem.getText().toString();
-               //     Log.d("vvv",search);
-                  //  Log.d("vvv124", myUser.getUserId().getSpace());
-                    itemService.searchItemsByName(myUser.getUserId().getSpace(),
-                            myUser.getUserId().getEmail(),search
-                            );
-                }
-            });
-
-
         }
+
+        findViews();
+        prefs = new MySharedPreferences(view.getContext());
+
+    //    myUser = new UserBoundary();
+        itemService = new ItemService();
+        getUserFromPrefs();
+        String itemListJson = prefs.getString(PrefsKeys.ITEM_LIST, "");
+        itemBoundaryList = new Gson().fromJson(itemListJson, ItemBoundary[].class);
+        layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+
+        //loads the itemlist to the recyclerView
+        //adapter = new ItemAdapter(itemBoundaryList);
+        //recyclerView.setAdapter(adapter);
+
+        Log.d("vvv122", myUser.getUserId().getSpace());
+        itemService.initSearchItemsByNameCallBack(searchBookItemByNameCallBack);
+        Log.d("vvv123", myUser.getUserId().getSpace());
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchProgressBar.setVisibility(View.VISIBLE);
+                String search = searchItem.getText().toString();
+           //     Log.d("vvv",search);
+              //  Log.d("vvv124", myUser.getUserId().getSpace());
+                itemService.searchItemsByName(myUser.getUserId().getSpace(),
+                        myUser.getUserId().getEmail(),search
+                        );
+            }
+        });
 
         return view;
     }

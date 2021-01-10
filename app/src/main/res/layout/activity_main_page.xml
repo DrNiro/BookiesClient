@@ -41,7 +41,7 @@
             android:padding="3dp"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:src="@drawable/toolbar_img_profile"
+            android:src="@drawable/toolbar_img_library_unfocused"
             />
 
         <ImageView
@@ -51,6 +51,7 @@
             android:padding="3dp"
             android:layout_gravity="center"
             android:layout_weight="1"
+            android:src="@drawable/toolbar_img_chat_unfocused"
             />
         <!--        android:src="@drawable/toolbar_img_chat"-->
 
@@ -72,7 +73,7 @@
             android:layout_marginTop="1dp"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:src="@drawable/toolbar_img_search"
+            android:src="@drawable/toolbar_img_search_unfocused"
             />
 
 
@@ -83,7 +84,7 @@
             android:padding="3dp"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:src="@drawable/toolbar_img_map"
+            android:src="@drawable/toolbar_img_map_unfocused"
             />
 
     </LinearLayout>

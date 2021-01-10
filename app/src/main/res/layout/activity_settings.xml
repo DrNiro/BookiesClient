@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.SettingsActivity"
+    android:padding="10dp">
+
+    <TextView
+        android:id="@+id/settings_TXT_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:textColor="@color/black"/>
+
+    <RelativeLayout
+        android:id="@+id/settings_BTN_editUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settings_TXT_title"
+        android:layout_marginTop="5dp"
+        android:padding="15dp">
+
+        <RelativeLayout
+            android:id="@+id/settings_LAY_editUsernameContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/settings_IMG_editUsername"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_edit_btn"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:id="@+id/settings_TXT_editUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit Username"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:paddingLeft="15dp"
+                android:layout_toRightOf="@+id/settings_IMG_editUsername"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/settings_LAY_editUsernameEditor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_LAY_editUsernameContainer"
+            android:layout_marginTop="15dp"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/settings_EDT_editUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_search_edit_text"
+                android:hint="New username"
+                android:ems="15"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="7dp"
+                />
+
+            <TextView
+                android:id="@+id/settings_BTN_okUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OK"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black"
+                android:layout_toRightOf="@+id/settings_EDT_editUsername"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_BTN_editAvatar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settings_BTN_editUsername"
+        android:layout_marginTop="5dp"
+        android:padding="15dp">
+
+        <RelativeLayout
+            android:id="@+id/settings_LAY_editAvatarContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/settings_IMG_editAvatar"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:background="@drawable/ic_edit_btn"
+                android:layout_centerVertical="true"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Edit Avatar"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:paddingLeft="15dp"
+                android:layout_toRightOf="@+id/settings_IMG_editAvatar"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/settings_LAY_editAvatarEditor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/settings_LAY_editAvatarContainer"
+            android:layout_marginTop="15dp"
+            android:visibility="gone">
+
+            <EditText
+                android:id="@+id/settings_EDT_editAvatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_search_edit_text"
+                android:hint="New avatar"
+                android:ems="15"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="7dp"/>
+
+            <TextView
+                android:id="@+id/settings_BTN_okAvatar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OK"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_centerVertical="true"
+                android:paddingLeft="10dp"
+                android:textColor="@color/black"
+                android:layout_toRightOf="@+id/settings_EDT_editAvatar"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_BTN_logout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settings_BTN_editAvatar"
+        android:padding="15dp">
+
+        <ImageView
+            android:id="@+id/settings_IMG_logout"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_logout"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/settings_TXT_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:layout_toRightOf="@+id/settings_IMG_logout"
+            android:layout_centerVertical="true"
+            android:paddingLeft="15dp"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
